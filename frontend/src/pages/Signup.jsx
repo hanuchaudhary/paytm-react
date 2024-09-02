@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import Input from "../components/Input";
 import Button from "../components/Button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import SwitchRoute from "../components/SwitchRoute";
 import axios from "axios";
 
 const Signup = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -21,6 +22,9 @@ const Signup = () => {
         password,
       });
       localStorage.setItem("token", response.data.token);
+      console.log(response.data);
+      
+      navigate("/dashboard?name=" + response.data.user.firstName);
       console.log("Sign up successful");
     } catch (error) {
       console.error("Sign up error:", error);

@@ -1,9 +1,43 @@
 import React from "react";
 import FeatureCard from "../components/FeatureCard";
 import Button from "../components/Button";
-import { Link } from "react-router-dom";
+import {
+  FaLock,
+  FaMobileAlt,
+  FaUserFriends,
+  FaRegCreditCard,
+} from "react-icons/fa";
+import { IoLogInSharp } from "react-icons/io5";
+import { FaLocationArrow } from "react-icons/fa6";
 
 const LandingPage = () => {
+  const features = [
+    {
+      icon: <FaLock size={40} />,
+      title: "Secure Transactions",
+      description:
+        "All transactions are encrypted with state-of-the-art security protocols.",
+    },
+    {
+      icon: <FaMobileAlt size={40} />,
+      title: "Mobile Payments",
+      description:
+        "Make payments easily on the go with our mobile app, available on all platforms.",
+    },
+    {
+      icon: <FaUserFriends size={40} />,
+      title: "Peer-to-Peer Transfers",
+      description:
+        "Send money to friends and family instantly and without any fees.",
+    },
+    {
+      icon: <FaRegCreditCard size={40} />,
+      title: "Multiple Payment Options",
+      description:
+        "Use a variety of payment methods including credit cards, bank transfers, and digital wallets.",
+    },
+  ];
+
   return (
     <div className="flex flex-col min-h-screen  text-white">
       <header className=" p-6">
@@ -26,9 +60,7 @@ const LandingPage = () => {
               </a>
             </li>
           </ul>
-          <Link to={"/signup"}>
-            <Button value={"Sign up"} />
-          </Link>
+          <Button to={"./signup"} value={"Sign up"} />
         </nav>
         <div className="container mx-auto text-center mt-10">
           <h1 className="text-4xl font-bold">
@@ -38,39 +70,22 @@ const LandingPage = () => {
             Join thousands of users who trust PayNow for their daily
             transactions.
           </p>
-          <Button value={"Get Started"} />
+          <div className="flex items-center justify-center">
+            <Button value={"Get Started"}/>
+          </div>
         </div>
       </header>
 
-      <section id="features" className="container mx-auto my-10 px-4">
-        <h2 className="text-3xl font-bold text-center">Features</h2>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 mt-10">
+      <div className="grid gap-8 px-8 md:grid-cols-2 lg:grid-cols-4">
+        {features.map((feature, index) => (
           <FeatureCard
-            image={
-              "https://web-images.credcdn.in/v2/_next/assets/images/landing/desktop/scan-n-pay.png"
-            }
-            title={"scan & pay any UPI QR"}
+            key={index}
+            icon={feature.icon}
+            title={feature.title}
+            description={feature.description}
           />
-          <FeatureCard
-            image={
-              "https://web-images.credcdn.in/v2/_next/assets/images/landing/desktop/scan-n-pay.png"
-            }
-            title={"scan & pay any UPI QR"}
-          />
-          <FeatureCard
-            image={
-              "https://web-images.credcdn.in/v2/_next/assets/images/landing/desktop/scan-n-pay.png"
-            }
-            title={"UPI payments on credit"}
-          />
-          <FeatureCard
-            image={
-              "https://web-images.credcdn.in/v2/_next/assets/images/landing/desktop/scan-n-pay.png"
-            }
-            title={"Send Money to any UPI app"}
-          />
-        </div>
-      </section>
+        ))}
+      </div>
 
       <section id="about" className=" py-20">
         <div className="container mx-auto text-center px-4">

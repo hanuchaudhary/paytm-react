@@ -1,31 +1,15 @@
-import React from "react";
+import React from 'react';
 
-const FeatureCard = ({image, title}) => {
+function FeatureCard({ icon, title, description }) {
   return (
-    <div>
-      <div className="card relative border border-zinc-500">
-        <div className="overflow-hidden">
-          <img
-            className=""
-            src={image}
-            alt=""
-          />
-        </div>
-        <div className="absolute z-1 top-0 p-5 md:p-11">
-          <div >
-            <img className="w-20 md:w-40"
-              src="https://web-images.credcdn.in/v2/_next/assets/images/landing/desktop/snp-logo-final.png"
-              alt=""
-            />
-          </div>
-          <h1 className="md:text-5xl text-xl lg:text-2xl font-semibold my-2 lg:my-3 md:my-6">{title}</h1>
-          <div className="uppercase text-sm border border-zinc-400 font-semibold md:py-4 py-2 md:px-8 px-3 inline-block">
-            Know more
-          </div>
-        </div>
+    <div className="bg-zinc-800 p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
+      <div className="flex justify-center items-center mb-4 text-orange-300">
+        {icon}
       </div>
+      <h3 className="text-xl font-semibold text-white mb-2 text-center">{title}</h3>
+      <p className="text-zinc-400 text-center">{description}</p>
     </div>
   );
-};
+}
 
 export default FeatureCard;

@@ -243,17 +243,29 @@ app.get("/bulk", async (req, res) => {
 
 //account routes-------------------------------------------------
 
-app.get("/balance", authMiddleware, async (req, res ,next) => {
-    const account = await Account.findOne({
-        userId: req.userId
-    });
-    
-    res.json({
-        message : "Balance Fetched!!",
-        userId : account.userId,
-        balance: account.balance,
-    })
+app.get("/balance", authMiddleware, async (req, res, next) => {
+    try {
+        const account = await Account.findOne({ userId: req.userId });
+
+        if (!account) {
+            return res.status(404).json({
+                message: "Account not found!!!",
+                userId: req.userId,
+                account: null
+            });
+        }
+
+        res.json({
+            message: "Balance Fetched!!",
+            userId: account.userId,
+            balance: account.balance,
+        });
+    } catch (error) {
+        next(error);
+    }
 });
+
+
 
 
 app.post("/transfer", authMiddleware, async (req, res) => {

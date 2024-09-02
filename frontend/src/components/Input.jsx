@@ -1,6 +1,6 @@
 import React from "react";
 
-const Input = ({ label, placeholder, onChange , value }) => {
+const Input = ({ label, placeholder, onChange , value , type}) => {
   return (
     <div>
       <div className="relative">
@@ -15,7 +15,7 @@ const Input = ({ label, placeholder, onChange , value }) => {
           value={value}
           id={label}
           name={label}
-          type={label}
+          type={type}
           required
           className="w-full mt-1 p-2 md:p-4 bg-zinc-900  text-white focus:outline-none focus:ring-2 focus:ring-zinc-400"
           placeholder={placeholder}
