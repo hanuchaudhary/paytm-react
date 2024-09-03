@@ -6,6 +6,7 @@ import Signup from "./pages/Signup";
 import Signin from "./pages/Signin";
 import SendMoney from "./pages/SendMoney";
 import LandingPage from "./pages/LandingPage";
+import BackendDown from "./pages/BackendDown";
 
 const App = () => {
   return (
@@ -13,6 +14,7 @@ const App = () => {
         <Background />
       <Routes>
         <Route path="/" element={<LandingPage />} />
+        <Route path="/error" element={<BackendDown />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/signin" element={<Signin />} />
