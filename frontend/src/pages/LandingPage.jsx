@@ -63,19 +63,24 @@ const LandingPage = () => {
           <Button to={"./signup"} value={"Sign up"} />
         </nav>
         <div className="container mx-auto text-center mt-10">
-          <h1 className="text-4xl font-bold">
-            Fast, Secure Payments Made Easy
+          <h1 className="text-4xl flex items-center justify-center gap-2 font-bold">
+            {"Fast, Secure Payments Made Easy".split(" ").map((e) => (
+              <p className="hover:text-orange-300 transition-colors duration-300 select-none">{e}</p>
+            ))}
           </h1>
           <p className="mt-4 mb-8 text-lg ">
             Join thousands of users who trust PayNow for their daily
             transactions.
           </p>
           <div className="flex items-center justify-center">
-            <Button value={"Get Started"}/>
+            <Button value={"Get Started"} />
           </div>
         </div>
       </header>
 
+      <h1 className="text-center font-semibold text-3xl py-8 mt-24">
+        Features
+      </h1>
       <div className="grid gap-8 px-8 md:grid-cols-2 lg:grid-cols-4">
         {features.map((feature, index) => (
           <FeatureCard

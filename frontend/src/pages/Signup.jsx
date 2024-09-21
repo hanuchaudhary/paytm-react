@@ -40,7 +40,7 @@ const Signup = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen text-white">
-      <div className="relative p-4 md:p-8 m-10 bg-black bg-opacity-70 border border-zinc-500 shadow-md">
+      <div className="relative p-4 md:p-8 m-10 bg-neutral-950 border border-neutral-800 shadow-md">
         <Link to={"/"} className="absolute top-3 right-5">
           <h1 className="text-4xl font-semibold">×</h1>
         </Link>

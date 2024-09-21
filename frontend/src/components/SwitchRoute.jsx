@@ -4,9 +4,9 @@ import { Link } from "react-router-dom";
 const SwitchRoute = ({to , label , title}) => {
   return (
     <div>
-      <p className="text-gray-400">
+      <p className="text-neutral-400">
         {title}{" "}
-        <Link to={to} className="text-blue-500 hover:underline">
+        <Link to={to} className="text-orange-300 hover:underline">
           {label}
         </Link>
       </p>

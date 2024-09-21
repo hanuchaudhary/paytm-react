@@ -1,12 +1,12 @@
 import React from "react";
 
-const Input = ({ label, placeholder, onChange , value , type}) => {
+const Input = ({ label, placeholder, onChange, value, type }) => {
   return (
     <div>
       <div className="relative">
         <label
           htmlFor={label}
-          className="block text-sm font-medium text-gray-300 capitalize"
+          className="block text-sm font-medium text-neutral-300 capitalize"
         >
           {label}
         </label>
@@ -17,7 +17,7 @@ const Input = ({ label, placeholder, onChange , value , type}) => {
           name={label}
           type={type}
           required
-          className="w-full mt-1 p-2 md:p-4 bg-zinc-900  text-white focus:outline-none focus:ring-2 focus:ring-zinc-400"
+          className="w-full mt-1 p-2 md:p-4 bg-neutral-900 text-white focus:outline-none focus:ring-2 focus:ring-neutral-400"
           placeholder={placeholder}
         />
       </div>
