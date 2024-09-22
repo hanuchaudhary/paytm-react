@@ -1,8 +1,8 @@
-import { Bell, Moon, Sun, User } from "lucide-react";
-import { useState } from "react";
+import { Bell, Sun, User } from "lucide-react";
+// import { useState } from "react";
 
 const Nav = () => {
-  const [theme, setTheme] = useState("light");
+  // const [theme, setTheme] = useState("light");
 
   return (
     <div className="w-full relative ">
@@ -14,11 +14,12 @@ const Nav = () => {
               // onClick={toggleTheme}
               className="p-2 rounded-full bg-neutral-200 dark:bg-neutral-700 hover:bg-neutral-300 dark:hover:bg-neutral-600 transition duration-300"
             >
-              {theme === "light" ? (
+              {/* {theme === "light" ? (
                 <Moon className="h-5 w-5" />
               ) : (
                 <Sun className="h-5 w-5" />
-              )}
+              )} */}
+              <Sun className="h-5 w-5" />
               <span className="sr-only">Toggle theme</span>
             </button>
             <button className="p-2 rounded-full bg-neutral-200 dark:bg-neutral-700 hover:bg-neutral-300 dark:hover:bg-neutral-600 transition duration-300">
