@@ -20,7 +20,7 @@ const Card = ({ name, email, id }: cardInterface) => {
         isOpen={close}
         onClose={() => setClose(false)}
       />
-      <div className="flex items-center justify-between bg-neutral-100 dark:bg-neutral-700 md:p-4 p-3 rounded-lg">
+      <div className="flex items-center justify-between bg-neutral-100 hover:bg-neutral-200 transition-colors duration-500 dark:bg-neutral-700 md:p-4 p-3 rounded-lg">
         <div className="flex items-center md:space-x-4 space-x-2">
           <div className="md:w-10 md:h-10 w-7 h-7 rounded-full bg-gradient-to-br from-purple-600 p-4 to-blue-500 flex items-center justify-center text-white uppercase font-bold">
             {name

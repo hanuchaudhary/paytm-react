@@ -7,19 +7,12 @@ import { AnimatePresence, motion } from "framer-motion";
 
 const App = () => {
   const location = useLocation();
-
+  localStorage.setItem("theme", "dark");
   return (
-    <div>
+    <div className="light">
       <AnimatePresence mode="wait" initial={false}>
         <Routes location={location} key={location.pathname}>
-          <Route
-            path="/"
-            element={
-              <PageTransition>
-                <Landing />
-              </PageTransition>
-            }
-          />
+          <Route path="/" element={<Landing />} />
           <Route
             path="/signup"
             element={
@@ -36,12 +29,8 @@ const App = () => {
               </PageTransition>
             }
           />
-          <Route
-            path="/dashboard"
-            element={
-                <Dashboard />
-            }
-          />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard/edit" element={<Dashboard />} />
         </Routes>
       </AnimatePresence>
     </div>
@@ -51,10 +40,10 @@ const App = () => {
 const PageTransition = ({ children }: { children: React.ReactNode }) => {
   return (
     <motion.div
-    initial={{ opacity: 0, filter: "blur(20px)" }} 
-    animate={{ opacity: 1, filter: "blur(0px)" }}  
-    exit={{ opacity: 0, filter: "blur(20px)" }}    
-    transition={{ duration: 0.2 }}  
+      initial={{ opacity: 0, filter: "blur(20px)" }}
+      animate={{ opacity: 1, filter: "blur(0px)" }}
+      exit={{ opacity: 0, filter: "blur(20px)" }}
+      transition={{ duration: 0.2 }}
     >
       {children}
     </motion.div>

@@ -36,7 +36,7 @@ export default function TransactionCompleted({
           <motion.div
             initial={{ y: 50 }}
             animate={{ y: 0 }}
-            className="bg-white dark:bg-gray-800 rounded-lg p-8 shadow-lg text-center"
+            className="bg-white dark:bg-neutral-800 rounded-lg p-8 shadow-lg text-center"
           >
             <motion.div
               initial={{ scale: 0 }}
@@ -50,7 +50,7 @@ export default function TransactionCompleted({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4 }}
-              className="text-2xl font-bold mb-2 text-gray-800 dark:text-white"
+              className="text-2xl font-bold mb-2 text-neutral-800 dark:text-white"
             >
               Transaction Complete
             </motion.h2>
@@ -58,7 +58,7 @@ export default function TransactionCompleted({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6 }}
-              className="text-lg text-gray-600 dark:text-gray-300 mb-1"
+              className="text-lg text-neutral-600 dark:text-neutral-300 mb-1"
             >
               ${amount} sent to
             </motion.p>
@@ -66,7 +66,7 @@ export default function TransactionCompleted({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.8 }}
-              className="text-xl capitalize font-semibold text-gray-800 dark:text-white"
+              className="text-xl capitalize font-semibold text-neutral-800 dark:text-white"
             >
               {recipient}
             </motion.p>

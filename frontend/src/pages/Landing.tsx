@@ -1,29 +1,17 @@
-import { useState, useEffect } from "react";
 import {
   CreditCard,
   Shield,
   Zap,
   Globe,
   ChevronRight,
-  Moon,
-  Sun,
   Facebook,
   Twitter,
   Github,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import LandingNavbar from "../components/LandingNavbar";
 
 export default function LandingPage() {
-  const [theme, setTheme] = useState("light");
-
-  useEffect(() => {
-    document.documentElement.classList.toggle("dark", theme === "dark");
-  }, [theme]);
-
-  const toggleTheme = () => {
-    setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
-  };
-
   const featureCardData = [
     {
       icon: <CreditCard className="h-10 w-10 text-indigo-500" />,
@@ -48,52 +36,10 @@ export default function LandingPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-neutral-100 dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 font-sans">
-      <header className="bg-white dark:bg-neutral-800 shadow-md py-4 fixed w-full z-10">
-        <div className="container mx-auto px-6 flex justify-between items-center">
-          <div className="text-2xl font-bold">PayEase</div>
-          <nav className="hidden md:flex space-x-6">
-            <a
-              href="#features"
-              className="hover:text-indigo-500 transition duration-300"
-            >
-              Features
-            </a>
-            <a
-              href="#pricing"
-              className="hover:text-indigo-500 transition duration-300"
-            >
-              Pricing
-            </a>
-            <a
-              href="#contact"
-              className="hover:text-indigo-500 transition duration-300"
-            >
-              Contact
-            </a>
-          </nav>
-          <div className="flex items-center space-x-4">
-            <button
-              onClick={toggleTheme}
-              className="p-2 rounded-full bg-neutral-200 dark:bg-neutral-700 hover:bg-neutral-300 dark:hover:bg-neutral-600 transition duration-300"
-            >
-              {theme === "light" ? (
-                <Moon className="h-5 w-5" />
-              ) : (
-                <Sun className="h-5 w-5" />
-              )}
-              <span className="sr-only">Toggle theme</span>
-            </button>
-            <Link
-              to={"/signup"}
-              className="bg-indigo-500 text-white px-4 py-2 rounded-lg hover:bg-indigo-600 transition duration-300"
-            >
-              Sign Up
-            </Link>
-          </div>
-        </div>
-      </header>
-
+    <div className="min-h-screen relative transition-colors duration-500 bg-neutral-100 dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 font-sans">
+      <div>
+        <LandingNavbar />
+      </div>
       <main>
         <section className="pt-32 pb-20 px-6">
           <div className="container mx-auto text-center">
@@ -112,7 +58,10 @@ export default function LandingPage() {
             </Link>
           </div>
         </section>
-        <section id="features" className="py-20 bg-white dark:bg-neutral-800">
+        <section
+          id="features"
+          className="py-20 bg-white transition-colors duration-500 dark:bg-neutral-800"
+        >
           <div className="container mx-auto px-6">
             <h2 className="text-3xl font-bold text-center mb-12">
               Key Features
@@ -133,7 +82,7 @@ export default function LandingPage() {
         </section>
 
         {/* CTA Section */}
-        <section className="py-20 bg-indigo-800 text-white">
+        <section className="py-20 bg-gradient-to-br from-purple-600 to-blue-500 text-white">
           <div className="container mx-auto px-6 text-center">
             <h2 className="text-3xl font-bold mb-4">
               Ready to simplify your payments?
@@ -141,22 +90,21 @@ export default function LandingPage() {
             <p className="mb-8 text-xl">
               Join thousands of satisfied users and start using PayEase today.
             </p>
-            <a
-              href="#"
+            <Link to={"/signup"}
               className="bg-white text-indigo-500 px-8 py-3 rounded-lg text-lg font-semibold hover:bg-neutral-100 transition duration-300 inline-flex items-center"
             >
               Sign Up Now <ChevronRight className="ml-2 h-5 w-5" />
-            </a>
+            </Link>
           </div>
         </section>
       </main>
 
-      <footer className="bg-neutral-800 text-white py-12">
+      <footer className="dark:bg-neutral-800 bg-neutral-100 text-neutral-950 dark:text-white py-12">
         <div className="container mx-auto px-6">
           <div className="grid md:grid-cols-4 gap-8">
             <div>
               <h3 className="text-lg font-semibold mb-4">PayEase</h3>
-              <p className="text-neutral-400">
+              <p className="text-neutral-800">
                 Simplifying payments for everyone.
               </p>
             </div>
@@ -166,7 +114,7 @@ export default function LandingPage() {
                 <li>
                   <a
                     href="#"
-                    className="text-neutral-400 hover:text-white transition duration-300"
+                    className="text-neutral-800 hover:text-white transition duration-300"
                   >
                     About Us
                   </a>
@@ -174,7 +122,7 @@ export default function LandingPage() {
                 <li>
                   <a
                     href="#"
-                    className="text-neutral-400 hover:text-white transition duration-300"
+                    className=" hover:text-white transition duration-300"
                   >
                     Careers
                   </a>
@@ -182,7 +130,7 @@ export default function LandingPage() {
                 <li>
                   <a
                     href="#"
-                    className="text-neutral-400 hover:text-white transition duration-300"
+                    className=" hover:text-white transition duration-300"
                   >
                     Press
                   </a>
@@ -195,7 +143,7 @@ export default function LandingPage() {
                 <li>
                   <a
                     href="#"
-                    className="text-neutral-400 hover:text-white transition duration-300"
+                    className=" hover:text-white transition duration-300"
                   >
                     Help Center
                   </a>
@@ -203,7 +151,7 @@ export default function LandingPage() {
                 <li>
                   <a
                     href="#"
-                    className="text-neutral-400 hover:text-white transition duration-300"
+                    className=" hover:text-white transition duration-300"
                   >
                     Contact Us
                   </a>
@@ -211,7 +159,7 @@ export default function LandingPage() {
                 <li>
                   <a
                     href="#"
-                    className="text-neutral-400 hover:text-white transition duration-300"
+                    className=" hover:text-white transition duration-300"
                   >
                     Privacy Policy
                   </a>
@@ -223,21 +171,21 @@ export default function LandingPage() {
               <div className="flex space-x-4">
                 <a
                   href="#"
-                  className="text-neutral-400 hover:text-white transition duration-300"
+                  className=" hover:text-white transition duration-300"
                 >
                   <span className="sr-only">Facebook</span>
                   <Facebook />
                 </a>
                 <a
                   href="#"
-                  className="text-neutral-400 hover:text-white transition duration-300"
+                  className=" hover:text-white transition duration-300"
                 >
                   <span className="sr-only">Twitter</span>
                   <Twitter />
                 </a>
                 <a
                   href="#"
-                  className="text-neutral-400 hover:text-white transition duration-300"
+                  className=" hover:text-white transition duration-300"
                 >
                   <span className="sr-only">GitHub</span>
                   <Github />
@@ -245,7 +193,7 @@ export default function LandingPage() {
               </div>
             </div>
           </div>
-          <div className="mt-8 border-t border-neutral-700 pt-8 text-center text-neutral-400">
+          <div className="mt-8 border-t border-neutral-700 pt-8 text-center ">
             <p>&copy; 2023 PayEase. All rights reserved.</p>
           </div>
         </div>

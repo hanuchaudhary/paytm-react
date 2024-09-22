@@ -43,9 +43,7 @@ interface MeInterface {
 }
 
 export const useProfile = () => {
-  const [myData, setMyData] = useState<MeInterface | null>(null); // Change to single object or null
-  // const [loading, setLoading] = useState(true);
-
+  const [myData, setMyData] = useState<MeInterface | null>(null);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -54,20 +52,17 @@ export const useProfile = () => {
             Authorization: localStorage.getItem("token") || "",
           },
         });
-        setMyData(response.data.user); // Assuming response.data.user is an object
-        // setLoading(false);
+        setMyData(response.data.user);
       } catch (error: any) {
         console.error("Error fetching profile data:", error);
-        // setLoading(true); // This line should set loading to true only when retrying the request
       }
     };
 
     fetchData();
-  }, [SERVER_URL]);
+  }, [SERVER_URL , myData?.name]);
 
   return { myData };
 };
-
 
 export const useGetBalance = () => {
   const [loading, setLoading] = useState(true);
