@@ -51,7 +51,8 @@ exports.accountRouter.get("/balance", middleware_1.default, (req, res) => __awai
         }
         res.json({
             success: true,
-            user: user
+            balance: user.balance,
+            userDetails: user
         });
     }
     catch (error) {

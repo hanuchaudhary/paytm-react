@@ -8,7 +8,6 @@ export const accountRouter = express.Router();
 
 accountRouter.get("/balance", authMiddleware, async (req, res) => {
     try {
-        //@ts-ignore
         const userId = req.userId;
 
         if (!userId) {
@@ -43,7 +42,8 @@ accountRouter.get("/balance", authMiddleware, async (req, res) => {
 
         res.json({
             success: true,
-            user: user
+            balance: user.balance,
+            userDetails: user
         });
 
     } catch (error: any) {

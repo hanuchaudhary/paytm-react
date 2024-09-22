@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import { PrismaClient } from "@prisma/client";
 import { signinValidation, signupValidation } from "../Validation";
 import dotenv from 'dotenv';
+import authMiddleware from "../middleware";
 dotenv.config();
 
 export const userRouter = express.Router();
@@ -145,7 +146,7 @@ userRouter.post("/signin", async (req, res) => {
     }
 });
 
-userRouter.get("/bulk", async (req, res) => {
+userRouter.get("/bulk",authMiddleware, async (req, res) => {
     try {
         const filter = typeof req.query.filter === "string" ? req.query.filter : "";
 

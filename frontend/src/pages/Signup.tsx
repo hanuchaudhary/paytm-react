@@ -1,16 +1,44 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Eye, EyeOff, Lock, Mail, User } from "lucide-react";
 import BottomAuth from "../components/BottomAuth";
+import axios from "axios";
+import { SERVER_URL } from "../config";
+import { useNavigate } from "react-router-dom";
+import Button from "../components/Button";
 
-const SignUp: React.FC = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+interface SignupType {
+  email: string;
+  password: string;
+  name: string;
+}
+
+const SignUp = () => {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [signupInputs, setSignupInputs] = useState<SignupType>({
+    email: "",
+    password: "",
+    name: "",
+  });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Sign up attempted with:", { name, email, password });
+  const handleSignup = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.post(
+        `${SERVER_URL}/api/v1/user/signup`,
+        signupInputs
+      );
+      console.log("ceated!!");
+      const token = `Bearer ${response.data.token}`;
+      localStorage.setItem("token", token);
+      navigate("/dashboard");
+    } catch (error: any) {
+      setLoading(false);
+      setError(error);
+      console.log(error);
+    }
   };
 
   return (
@@ -22,7 +50,7 @@ const SignUp: React.FC = () => {
               Create your account
             </h2>
           </div>
-          <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          <div className="mt-8 space-y-6">
             <div className="rounded-md shadow-sm -space-y-px">
               <div>
                 <label htmlFor="name" className="sr-only">
@@ -43,8 +71,10 @@ const SignUp: React.FC = () => {
                     required
                     className="appearance-none rounded-none relative block w-full px-3 py-2 pl-10 border border-neutral-300 placeholder-neutral-500 text-neutral-900 rounded-t-md focus:outline-none focus:ring-orange-500 focus:border-orange-500 focus:z-10 sm:text-sm dark:bg-neutral-800 dark:border-neutral-700 dark:text-white"
                     placeholder="Full name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    value={signupInputs.name}
+                    onChange={(e) =>
+                      setSignupInputs({ ...signupInputs, name: e.target.value })
+                    }
                   />
                 </div>
               </div>
@@ -67,8 +97,13 @@ const SignUp: React.FC = () => {
                     required
                     className="appearance-none rounded-none relative block w-full px-3 py-2 pl-10 border border-neutral-300 placeholder-neutral-500 text-neutral-900 focus:outline-none focus:ring-orange-500 focus:border-orange-500 focus:z-10 sm:text-sm dark:bg-neutral-800 dark:border-neutral-700 dark:text-white"
                     placeholder="Email address"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={signupInputs.email}
+                    onChange={(e) =>
+                      setSignupInputs({
+                        ...signupInputs,
+                        email: e.target.value,
+                      })
+                    }
                   />
                 </div>
               </div>
@@ -91,13 +126,17 @@ const SignUp: React.FC = () => {
                     required
                     className="appearance-none rounded-none relative block w-full px-3 py-2 pl-10 border border-neutral-300 placeholder-neutral-500 text-neutral-900 rounded-b-md focus:outline-none focus:ring-orange-500 focus:border-orange-500 focus:z-10 sm:text-sm dark:bg-neutral-800 dark:border-neutral-700 dark:text-white"
                     placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    value={signupInputs.password}
+                    onChange={(e) =>
+                      setSignupInputs({
+                        ...signupInputs,
+                        password: e.target.value,
+                      })
+                    }
                   />
                   <div className="absolute z-10 inset-y-0 right-0 pr-3 flex items-center">
                     <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
+                      onClick={() => setShowPassword((prev) => !prev)}
                       className="text-neutral-400 hover:text-neutral-500 focus:outline-none focus:text-neutral-500"
                       aria-label={
                         showPassword ? "Hide password" : "Show password"
@@ -115,16 +154,15 @@ const SignUp: React.FC = () => {
             </div>
 
             <div>
-              <button
-                type="submit"
-                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
-              >
-                Sign up
-              </button>
+              <Button onClick={handleSignup} label="Sign up"/>
             </div>
-          </form>
+          </div>
 
-          <BottomAuth to={"/signin"} label={"Already have an account?"} title={" Signin"} />
+          <BottomAuth
+            to={"/signin"}
+            label={"Already have an account?"}
+            title={" Signin"}
+          />
         </div>
       </main>
 

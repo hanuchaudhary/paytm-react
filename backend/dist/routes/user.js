@@ -19,6 +19,7 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const client_1 = require("@prisma/client");
 const Validation_1 = require("../Validation");
 const dotenv_1 = __importDefault(require("dotenv"));
+const middleware_1 = __importDefault(require("../middleware"));
 dotenv_1.default.config();
 exports.userRouter = express_1.default.Router();
 const prisma = new client_1.PrismaClient();
@@ -145,7 +146,7 @@ exports.userRouter.post("/signin", (req, res) => __awaiter(void 0, void 0, void 
         });
     }
 }));
-exports.userRouter.get("/bulk", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.userRouter.get("/bulk", middleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const filter = typeof req.query.filter === "string" ? req.query.filter : "";
         const allUsers = yield prisma.user.findMany({
