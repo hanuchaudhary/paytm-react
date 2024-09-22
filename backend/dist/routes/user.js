@@ -209,28 +209,17 @@ exports.userRouter.get("/me", middleware_1.default, (req, res) => __awaiter(void
         });
     }
 }));
-exports.userRouter.post("/remove", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.userRouter.post("/remove", middleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { id } = req.body;
-        if (!id) {
+        const userId = req.userId;
+        if (!userId) {
             return res.status(400).json({
                 success: false,
                 message: "User ID is required",
             });
         }
-        const user = yield prisma.user.findUnique({
-            where: {
-                id
-            }
-        });
-        if (!user) {
-            return res.status(400).json({
-                success: false,
-                message: "No user Found!!",
-            });
-        }
         yield prisma.user.delete({
-            where: { id }
+            where: { id: userId }
         });
         return res.status(200).json({
             success: true,
@@ -245,24 +234,14 @@ exports.userRouter.post("/remove", (req, res) => __awaiter(void 0, void 0, void 
         });
     }
 }));
-exports.userRouter.put("/update", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.userRouter.put("/update", middleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { id, name, password } = req.body;
-        if (!id) {
+        const userId = req.userId;
+        const { name, password } = req.body;
+        if (!userId) {
             return res.status(400).json({
                 success: false,
                 message: "User ID is required",
-            });
-        }
-        const user = yield prisma.user.findUnique({
-            where: {
-                id
-            }
-        });
-        if (!user) {
-            return res.status(400).json({
-                success: false,
-                message: "No user Found!!",
             });
         }
         const updateData = {};
@@ -271,7 +250,7 @@ exports.userRouter.put("/update", (req, res) => __awaiter(void 0, void 0, void 0
         if (password)
             updateData.password = yield bcrypt_1.default.hash(password, 10);
         const updatedUser = yield prisma.user.update({
-            where: { id: id },
+            where: { id: userId },
             data: updateData
         });
         return res.status(200).json({

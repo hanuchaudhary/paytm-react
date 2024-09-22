@@ -215,31 +215,18 @@ userRouter.get("/me", authMiddleware, async (req, res) => {
     }
 });
 
-userRouter.post("/remove", async (req, res) => {
+userRouter.post("/remove", authMiddleware, async (req, res) => {
     try {
-        const { id } = req.body;
-        if (!id) {
+        const userId = req.userId;
+        if (!userId) {
             return res.status(400).json({
                 success: false,
                 message: "User ID is required",
             });
         }
 
-        const user = await prisma.user.findUnique({
-            where: {
-                id
-            }
-        })
-
-        if (!user) {
-            return res.status(400).json({
-                success: false,
-                message: "No user Found!!",
-            });
-        }
-
         await prisma.user.delete({
-            where: { id }
+            where: { id: userId }
         })
 
         return res.status(200).json({
@@ -256,35 +243,24 @@ userRouter.post("/remove", async (req, res) => {
     }
 })
 
-userRouter.put("/update", async (req, res) => {
+userRouter.put("/update", authMiddleware, async (req, res) => {
     try {
-        const { id, name, password } = req.body;
-        if (!id) {
+        const userId = req.userId;
+        const {name , password} = req.body;
+        if (!userId) {
             return res.status(400).json({
                 success: false,
                 message: "User ID is required",
             });
         }
 
-        const user = await prisma.user.findUnique({
-            where: {
-                id
-            }
-        })
-
-        if (!user) {
-            return res.status(400).json({
-                success: false,
-                message: "No user Found!!",
-            });
-        }
 
         const updateData: any = {};
         if (name) updateData.name = name;
         if (password) updateData.password = await bcrypt.hash(password, 10);
 
         const updatedUser = await prisma.user.update({
-            where: { id: id },
+            where: { id: userId },
             data: updateData
         })
 
