@@ -15,8 +15,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.userRouter = void 0;
 const express_1 = __importDefault(require("express"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const client_1 = require("@prisma/client");
 const Validation_1 = require("../Validation");
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
 exports.userRouter = express_1.default.Router();
 const prisma = new client_1.PrismaClient();
 exports.userRouter.post("/signup", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -49,13 +52,30 @@ exports.userRouter.post("/signup", (req, res) => __awaiter(void 0, void 0, void 
             data: {
                 email: email,
                 password: hashedPassword,
-                name: name
+                name: name,
+                balance: {
+                    create: {
+                        balance: 1 + Math.random() * 10000
+                    }
+                }
+            }, select: {
+                id: true,
+                email: true,
+                name: true,
+                balance: true
             }
         });
+        const tokenData = {
+            id: user.id,
+            email: user.email,
+            name: user.name
+        };
+        const token = jsonwebtoken_1.default.sign(tokenData, process.env.JWT_SECRET, { expiresIn: "1h" });
         return res.status(201).json({
             success: true,
             message: "User created successfully",
-            user: user
+            user: user,
+            token: token
         });
     }
     catch (error) {
@@ -83,7 +103,8 @@ exports.userRouter.post("/signin", (req, res) => __awaiter(void 0, void 0, void 
                 email: true,
                 id: true,
                 name: true,
-                password: true
+                password: true,
+                balance: true
             }
         });
         if (!user) {
@@ -99,9 +120,16 @@ exports.userRouter.post("/signin", (req, res) => __awaiter(void 0, void 0, void 
                 message: "Password Not Matched!!",
             });
         }
+        const tokenData = {
+            id: user.id,
+            email: user.email,
+            name: user.name
+        };
+        const token = jsonwebtoken_1.default.sign(tokenData, process.env.JWT_SECRET, { expiresIn: "1h" });
         return res.status(201).json({
             success: true,
             message: "User Fetched successfully",
+            token: token,
             user: {
                 id: user.id,
                 email: user.email,
@@ -131,6 +159,7 @@ exports.userRouter.get("/bulk", (req, res) => __awaiter(void 0, void 0, void 0, 
                 email: true,
                 id: true,
                 name: true,
+                balance: true
             }
         });
         if (allUsers.length === 0) {

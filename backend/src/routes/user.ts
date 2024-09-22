@@ -1,7 +1,10 @@
 import express from "express";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 import { PrismaClient } from "@prisma/client";
 import { signinValidation, signupValidation } from "../Validation";
+import dotenv from 'dotenv';
+dotenv.config();
 
 export const userRouter = express.Router();
 const prisma = new PrismaClient();
@@ -40,13 +43,32 @@ userRouter.post("/signup", async (req, res) => {
             data: {
                 email: email,
                 password: hashedPassword,
-                name: name
+                name: name,
+                balance: {
+                    create: {
+                        balance: 1 + Math.random() * 10000
+                    }
+                }
+            }, select: {
+                id: true,
+                email: true,
+                name: true,
+                balance: true
             }
         });
+
+        const tokenData = {
+            id: user.id,
+            email: user.email,
+            name: user.name
+        }
+        const token = jwt.sign(tokenData, process.env.JWT_SECRET as string, { expiresIn: "1h" })
+
         return res.status(201).json({
             success: true,
             message: "User created successfully",
-            user: user
+            user: user,
+            token: token
         });
 
     } catch (error: any) {
@@ -77,7 +99,8 @@ userRouter.post("/signin", async (req, res) => {
                 email: true,
                 id: true,
                 name: true,
-                password: true
+                password: true,
+                balance: true
             }
         });
         if (!user) {
@@ -95,9 +118,17 @@ userRouter.post("/signin", async (req, res) => {
             });
         }
 
+        const tokenData = {
+            id: user.id,
+            email: user.email,
+            name: user.name
+        }
+        const token = jwt.sign(tokenData, process.env.JWT_SECRET as string, { expiresIn: "1h" })
+
         return res.status(201).json({
             success: true,
             message: "User Fetched successfully",
+            token : token,
             user: {
                 id: user.id,
                 email: user.email,
@@ -129,6 +160,7 @@ userRouter.get("/bulk", async (req, res) => {
                 email: true,
                 id: true,
                 name: true,
+                balance: true
             }
         });
 
