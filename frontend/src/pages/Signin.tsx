@@ -24,7 +24,13 @@ const SignIn = () => {
 
   const handleSignIn = async () => {
     try {
+      if (!signinInputs.email || !signinInputs.password) {
+        setError("Enter Email Or Password");
+        return;
+      }
+
       setLoading(true);
+      setError(null);
       const response = await axios.post(
         `${SERVER_URL}/api/v1/user/signin`,
         signinInputs
@@ -35,8 +41,13 @@ const SignIn = () => {
       navigate("/dashboard");
     } catch (error: any) {
       setLoading(false);
-      setError(error);
-      console.log(error);
+      if (error.response) {
+        setError(error.response.data.message || "An error occurred.");
+      } else {
+        setError("Unable to connect to the server. Please try again.");
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -58,7 +69,7 @@ const SignIn = () => {
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <Mail
-                      className="h-5 w-5 text-neutral-400"
+                      className="h-5 w-5 z-50 text-neutral-400"
                       aria-hidden="true"
                     />
                   </div>
@@ -68,7 +79,7 @@ const SignIn = () => {
                     type="email"
                     autoComplete="email"
                     required
-                    className="appearance-none rounded-none relative block w-full px-3 py-2 pl-10 border border-neutral-300 placeholder-neutral-500 text-neutral-900 rounded-t-md focus:outline-none focus:ring-orange-500 focus:border-orange-500 focus:z-10 sm:text-sm dark:bg-neutral-800 dark:border-neutral-700 dark:text-white"
+                    className="appearance-none rounded-none relative block w-full px-3 py-2 pl-10 border border-neutral-300 placeholder-neutral-500 text-neutral-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm dark:bg-neutral-800 dark:border-neutral-700 dark:text-white"
                     placeholder="Email address"
                     value={signinInputs.email}
                     onChange={(e) =>
@@ -87,7 +98,7 @@ const SignIn = () => {
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <Lock
-                      className="h-5 w-5 text-neutral-400"
+                      className="h-5 w-5 z-50 text-neutral-400"
                       aria-hidden="true"
                     />
                   </div>
@@ -97,7 +108,7 @@ const SignIn = () => {
                     type={showPassword ? "text" : "password"}
                     autoComplete="current-password"
                     required
-                    className="appearance-none rounded-none relative block w-full px-3 py-2 pl-10 border border-neutral-300 placeholder-neutral-500 text-neutral-900 rounded-b-md focus:outline-none focus:ring-orange-500 focus:border-orange-500 focus:z-10 sm:text-sm dark:bg-neutral-800 dark:border-neutral-700 dark:text-white"
+                    className="appearance-none rounded-none relative block w-full px-3 py-2 pl-10 border border-neutral-300 placeholder-neutral-500 text-neutral-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm dark:bg-neutral-800 dark:border-neutral-700 dark:text-white"
                     placeholder="Password"
                     value={signinInputs.password}
                     onChange={(e) =>
@@ -111,7 +122,7 @@ const SignIn = () => {
                     <button
                       type="button"
                       onClick={() => setShowPassword((prev) => !prev)}
-                      className="text-neutral-400 hover:text-neutral-500 focus:outline-none focus:text-neutral-500"
+                      className="text-neutral-400 z-50 hover:text-neutral-500 focus:outline-none focus:text-neutral-500"
                       aria-label={
                         showPassword ? "Hide password" : "Show password"
                       }
@@ -127,13 +138,19 @@ const SignIn = () => {
               </div>
             </div>
 
+            {error && (
+              <div className="bg-red-100 text-red-600 p-2 rounded-lg my-4">
+                {error}
+              </div>
+            )}
+
             <div className="flex items-center justify-between">
               <div className="flex items-center">
                 <input
                   id="remember-me"
                   name="remember-me"
                   type="checkbox"
-                  className="h-4 w-4 text-orange-600 focus:ring-orange-500 border-neutral-300 rounded dark:border-neutral-700"
+                  className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-neutral-300 rounded dark:border-neutral-700"
                 />
                 <label
                   htmlFor="remember-me"
@@ -146,7 +163,11 @@ const SignIn = () => {
               <Forgot />
             </div>
 
-            <Button label="Signin" onClick={handleSignIn} />
+            <Button
+              label={loading ? "Signing in..." : "Sign in"}
+              onClick={handleSignIn}
+              // disabled={loading}
+            />
           </div>
           <BottomAuth
             to={"/signup"}

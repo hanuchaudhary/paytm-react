@@ -184,6 +184,31 @@ exports.userRouter.get("/bulk", middleware_1.default, (req, res) => __awaiter(vo
         });
     }
 }));
+exports.userRouter.get("/me", middleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const userId = req.userId;
+        const user = yield prisma.user.findUnique({
+            where: {
+                id: userId
+            },
+            select: {
+                id: true,
+                name: true,
+                email: true,
+            }
+        });
+        res.status(200).json({
+            user
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Server error during fetching users",
+            error: error.message
+        });
+    }
+}));
 exports.userRouter.post("/remove", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.body;

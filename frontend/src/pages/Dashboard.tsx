@@ -3,10 +3,14 @@ import DisplayCards from "../components/DisplayCards";
 import Card from "../components/Card";
 import DashboardFooter from "../components/DashboardFooter";
 import { Search } from "lucide-react";
-import { useAllUsers } from "../Hooks/Route";
+import { useAllUsers, useProfile } from "../Hooks/Route";
 
 export default function Dashboard() {
   const { data, setFilter } = useAllUsers();
+  const { myData } = useProfile();
+
+  const filterData = data.filter((item) => item.id != myData?.id)
+
   function handleOnClick() {}
 
   return (
@@ -14,13 +18,18 @@ export default function Dashboard() {
       <Nav />
       <main className="container md:pt-28 pt-24 mx-auto px-4 md:px-6 py-6 md:py-8">
         <div className="md:mb-12 mb-6">
-          <h1 className="md:text-5xl text-4xl font-bold mb-2">Welcome back, name</h1>
+          <div>
+            <h1 className="flex flex-col md:text-5xl text-4xl font-bold mb-2">
+              Welcome back,
+              <span className="text-2xl text-neutral-300"> {myData?.name}</span>
+            </h1>
+          </div>
           <p className="text-neutral-600 dark:text-neutral-400">
             Here's your financial overview
           </p>
         </div>
         <div>
-          <DisplayCards/>
+          <DisplayCards />
         </div>
         <div className="bg-white dark:bg-neutral-800 rounded-2xl md:p-6 p-4  shadow-lg md:mb-12 mb-6">
           <h3 className="text-xl font-bold mb-4">Send Money</h3>
@@ -35,8 +44,8 @@ export default function Dashboard() {
               <Search className="absolute left-3 top-2.5 h-5 w-5 text-neutral-400" />
             </div>
           </div>
-          <div className="space-y-4 max-h-[70vh] overflow-y-scroll">
-            {data.map((user) => (
+          <div className="space-y-4 max-h-[70vh] overflow-y-scroll md:custom-scrollbar">
+            {filterData.map((user) => (
               <div key={user.id}>
                 <Card
                   id={user.id}

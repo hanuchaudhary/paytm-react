@@ -4,7 +4,7 @@ const Forgot = () => {
     <div className="text-sm">
       <a
         href="#"
-        className="font-medium text-orange-600 hover:text-orange-500 dark:text-orange-400 dark:hover:text-orange-300"
+        className="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300"
       >
         Forgot your password?
       </a>

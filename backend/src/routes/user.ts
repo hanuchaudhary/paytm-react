@@ -129,7 +129,7 @@ userRouter.post("/signin", async (req, res) => {
         return res.status(201).json({
             success: true,
             message: "User Fetched successfully",
-            token : token,
+            token: token,
             user: {
                 id: user.id,
                 email: user.email,
@@ -146,7 +146,7 @@ userRouter.post("/signin", async (req, res) => {
     }
 });
 
-userRouter.get("/bulk",authMiddleware, async (req, res) => {
+userRouter.get("/bulk", authMiddleware, async (req, res) => {
     try {
         const filter = typeof req.query.filter === "string" ? req.query.filter : "";
 
@@ -178,6 +178,33 @@ userRouter.get("/bulk",authMiddleware, async (req, res) => {
             message: "Users fetched successfully",
             users: allUsers
         });
+
+    } catch (error: any) {
+        res.status(500).json({
+            success: false,
+            message: "Server error during fetching users",
+            error: error.message
+        });
+    }
+});
+
+userRouter.get("/me", authMiddleware, async (req, res) => {
+    try {
+        const userId = req.userId as string;
+        const user = await prisma.user.findUnique({
+            where: {
+                id: userId
+            },
+            select: {
+                id: true,
+                name: true,
+                email: true,
+            }
+        })
+
+        res.status(200).json({
+            user
+        })
 
     } catch (error: any) {
         res.status(500).json({
