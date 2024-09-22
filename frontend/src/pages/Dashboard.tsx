@@ -3,29 +3,26 @@ import DisplayCards from "../components/DisplayCards";
 import Card from "../components/Card";
 import DashboardFooter from "../components/DashboardFooter";
 import { Search } from "lucide-react";
-import { useAllUsers, useGetBalance } from "../Hooks/Route";
+import { useAllUsers } from "../Hooks/Route";
 
 export default function Dashboard() {
   const { data, setFilter } = useAllUsers();
-  const { balance, loading } = useGetBalance();
-
   function handleOnClick() {}
 
   return (
     <div className="min-h-screen bg-neutral-100 dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 font-sans">
-      <div className=""></div>
       <Nav />
-      <main className="container mx-auto px-6 py-8">
-        <div className="mb-12">
-          <h1 className="text-4xl font-bold mb-2">Welcome back, </h1>
+      <main className="container md:pt-28 pt-24 mx-auto px-4 md:px-6 py-6 md:py-8">
+        <div className="md:mb-12 mb-6">
+          <h1 className="md:text-5xl text-4xl font-bold mb-2">Welcome back, name</h1>
           <p className="text-neutral-600 dark:text-neutral-400">
             Here's your financial overview
           </p>
         </div>
-
-        <DisplayCards balance={balance} loading={loading} />
-
-        <div className="bg-white dark:bg-neutral-800 rounded-2xl p-6 shadow-lg mb-12">
+        <div>
+          <DisplayCards/>
+        </div>
+        <div className="bg-white dark:bg-neutral-800 rounded-2xl md:p-6 p-4  shadow-lg md:mb-12 mb-6">
           <h3 className="text-xl font-bold mb-4">Send Money</h3>
           <div className="mb-4 seachCompo">
             <div className="relative">

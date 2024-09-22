@@ -20,7 +20,6 @@ const prisma = new client_1.PrismaClient();
 exports.accountRouter = express_1.default.Router();
 exports.accountRouter.get("/balance", middleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        //@ts-ignore
         const userId = req.userId;
         if (!userId) {
             return res.status(400).json({

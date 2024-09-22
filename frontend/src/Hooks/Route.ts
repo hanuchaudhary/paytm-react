@@ -36,28 +36,28 @@ export const useAllUsers = () => {
     return { data, loading, setFilter, error }
 }
 
-export const useGetBalance = () => {
-    const [loading, setLoading] = useState(true);
-    const [balance, setBalance] = useState(0);
-    useEffect(() => {
-        try {
-            const fetchBalance = async () => {
-                const response = await axios.get(`${SERVER_URL}/api/v1/account/balance`, {
-                    headers: {
-                        Authorization: localStorage.getItem("token")
-                    }
-                })
-                setBalance(response.data.balance)
-                setLoading(false)
-            }
-            fetchBalance();
+export const useGetBalance = (refresh: boolean) => {
+  const [loading, setLoading] = useState(true);
+  const [balance, setBalance] = useState(0);
 
-        } catch (error) {
-            setLoading(true)
-            console.log(error);
-        }
+  useEffect(() => {
+    const fetchBalance = async () => {
+      try {
+        const response = await axios.get(`${SERVER_URL}/api/v1/account/balance`, {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        });
+        setBalance(response.data.balance);
+      } catch (error) {
+        console.log("Error fetching balance:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    }, [])
+    fetchBalance();
+  }, [refresh]); 
 
-    return { balance, loading }
-}
+  return { balance, loading };
+};
