@@ -69,7 +69,7 @@ export const useProfile = () => {
 };
 
 
-export const useGetBalance = (refresh: boolean) => {
+export const useGetBalance = () => {
   const [loading, setLoading] = useState(true);
   const [balance, setBalance] = useState(0);
 
@@ -90,7 +90,7 @@ export const useGetBalance = (refresh: boolean) => {
     };
 
     fetchBalance();
-  }, [refresh]);
+  }, []);
 
   return { balance, loading };
 };

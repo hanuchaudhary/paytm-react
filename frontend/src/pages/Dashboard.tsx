@@ -9,7 +9,7 @@ export default function Dashboard() {
   const { data, setFilter } = useAllUsers();
   const { myData } = useProfile();
 
-  const filterData = data.filter((item) => item.id != myData?.id)
+  const filterData = data.filter((item) => item.id != myData?.id);
 
   function handleOnClick() {}
 
@@ -44,7 +44,7 @@ export default function Dashboard() {
               <Search className="absolute left-3 top-2.5 h-5 w-5 text-neutral-400" />
             </div>
           </div>
-          <div className="space-y-4 max-h-[70vh] overflow-y-scroll md:custom-scrollbar">
+          <div className="space-y-4 max-h-[70vh] overflow-y-scroll custom-scrollbar">
             {filterData.map((user) => (
               <div key={user.id}>
                 <Card
