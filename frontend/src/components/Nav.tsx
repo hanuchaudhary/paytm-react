@@ -7,7 +7,7 @@ const Nav = () => {
   const { theme, toggleTheme } = useTheme();
   return (
     <div className="w-full flex justify-center relative overflow-hidden">
-      <header className="fixed w-[95%] top-5 border-2 z-[100] dark:border-neutral-800 dark:bg-opacity-55 dark:backdrop-filter dark:backdrop-blur-md backdrop-filter backdrop-blur-md bg-opacity-55 border-neutral-200 rounded-xl bg-neutral-300 dark:bg-neutral-800 shadow-md py-5 mx-auto">
+      <header className="fixed w-[95%] top-4 border-2 z-[100] dark:border-neutral-800 dark:bg-opacity-55 dark:backdrop-filter dark:backdrop-blur-md backdrop-filter backdrop-blur-md bg-opacity-55 border-neutral-200 rounded-xl bg-neutral-300 dark:bg-neutral-800 shadow-md py-5 mx-auto">
         <div className="container mx-auto px-6 flex justify-between items-center">
           <div className="text-2xl font-bold">rePAY</div>
           <div className="flex items-center space-x-4">

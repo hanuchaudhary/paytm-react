@@ -15,9 +15,7 @@ export default function Dashboard() {
 
   return (
       <div className="min-h-screen transition-colors duration-500 bg-neutral-100 dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 font-sans">
-        <div>
           <Nav />
-        </div>
         <main className="container md:pt-32 pt-28 mx-auto px-4 md:px-6 py-6 md:py-8">
           <div className="md:mb-12 mb-6">
             <div>

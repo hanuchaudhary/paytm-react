@@ -3,7 +3,7 @@ import Signup from "./pages/Signup";
 import Signin from "./pages/Signin";
 import Landing from "./pages/Landing";
 import Dashboard from "./pages/Dashboard";
-import NotFound from "./pages/NotFound";
+import { NotFound } from "./pages/NotFound";
 import { AnimatePresence, motion } from "framer-motion";
 import { ThemeProvider } from "./providers/LocalThemeProvider";
 
@@ -15,9 +15,7 @@ const App = () => {
         <Route
           path="/"
           element={
-            <PageTransition>
               <Landing />
-            </PageTransition>
           }
         />
         <Route
@@ -39,9 +37,7 @@ const App = () => {
         <Route
           path="/dashboard"
           element={
-            <PageTransition>
               <Dashboard />
-            </PageTransition>
           }
         />
         <Route
