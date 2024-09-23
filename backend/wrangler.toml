@@ -1,7 +1,8 @@
-name = "_backend"
+name = "repay-backend"
 compatibility_date = "2024-09-23"
-node_compat = true
+# compatibility_flags = [ "nodejs_compat" ]
 
 [vars]
 DATABASE_URL="prisma://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiMDAzMGZlNTgtODhhNy00NDk3LTlmMzEtMGRhZGFiYjdmYjU0IiwidGVuYW50X2lkIjoiYWRmZWQ2N2E5MGVmOGY3YTcxOTgyNjMwNDM3NjQ5MDRmM2VmNWNjNTQzOGUxOWIzMDYxN2E2MTZlM2UxOTkzZiIsImludGVybmFsX3NlY3JldCI6ImE2MmJjYzgwLTY0YzMtNDczZC05ZmI3LTkyNDg2MjZhMzYxYiJ9.s6_XWjssbt0DQxc8h_NagwIcobzbqVi9_077bSNb0Tk"
+
 JWT_SECRET = "myjwtsecret"
