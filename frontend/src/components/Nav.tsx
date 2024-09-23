@@ -15,7 +15,7 @@ const Nav = () => {
   };
   return (
     <div className="w-full relative ">
-      <header className="fixed md:w-[90%] w-[94%] md:top-5 top-2 left-3 md:left-14 lg:left-16 border-2 z-[100] dark:border-neutral-800 dark:bg-opacity-55 dark:backdrop-filter dark:backdrop-blur-lg backdrop-filter backdrop-blur-md bg-opacity-55 border-neutral-200 rounded-xl bg-neutral-300 dark:bg-neutral-800 shadow-md py-5">
+      <header className="fixed md:w-[90%] w-[94%] md:top-5 top-2 left-3 md:left-14 lg:left-16 border-2 z-[100] dark:border-neutral-800 dark:bg-opacity-55 dark:backdrop-filter dark:backdrop-blur-md backdrop-filter backdrop-blur-md bg-opacity-55 border-neutral-200 rounded-xl bg-neutral-300 dark:bg-neutral-800 shadow-md py-5">
         <div className="container mx-auto px-6 flex justify-between items-center">
           <div className="text-2xl font-bold ">rePAY</div>
           <div className="flex items-center space-x-4">

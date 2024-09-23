@@ -1,14 +1,16 @@
-import express from "express";
-import cors from 'cors';
-import { userRouter } from "./routes/user";
-import { accountRouter } from "./routes/account";
+import { Hono } from 'hono'
+import { userRouter } from './routes/user';
+import { accountRouter } from './routes/account';
+import { cors } from 'hono/cors';
 
-const app = express();
-app.use(cors());
-app.use(express.json())
-app.use("/api/v1/user", userRouter);
-app.use("/api/v1/account", accountRouter);
+export const app = new Hono<{
+  Bindings: {
+      DATABASE_URL: string;
+      JWT_SECRET: string;
+  }
+}>();
+app.use("/*",cors());
+app.route('/api/v1/user', userRouter)
+app.route('/api/v1/account', accountRouter)
 
-app.listen(3000, () => {
-  console.log("Server is running on port 3000");
-});
+export default app

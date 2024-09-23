@@ -1,5 +1,6 @@
 import { useState } from "react";
 import SendMoneyModal from "../pages/SendMoney";
+import { motion } from "framer-motion";
 
 interface cardInterface {
   id: string;
@@ -35,12 +36,15 @@ const Card = ({ name, email, id }: cardInterface) => {
             </p>
           </div>
         </div>
-        <button
+        <motion.button
+          whileTap={{ scale: 0.95 }}
+          whileHover={{ scale: 1.05 }}
+          transition={{ease : "easeInOut"}}
           onClick={() => setClose(true)}
-          className="md:px-4 px-2 py-2 text-sm md:text-base bg-gradient-to-br from-green-600 to-teal-500 text-white rounded-lg hover:from-teal-600 hover:to-green-500 transition-colors duration-500"
+          className="md:px-4 px-2 py-2 text-sm md:text-base bg-gradient-to-br from-green-600 to-teal-500 text-white rounded-lg transition-colors duration-500"
         >
           Send Money
-        </button>
+        </motion.button>
       </div>
     </div>
   );

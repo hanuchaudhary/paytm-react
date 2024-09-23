@@ -54,17 +54,26 @@ const EditUserDetails = ({ onClick }: { onClick: () => void }) => {
         >
           <div className="flex justify-between gap-4 mb-4">
             <div className="flex flex-col">
-            <h1 className="md:text-xl font-semibold">Edit User Details</h1>
-            <h2 className="text-sm font-semibold text-neutral-400">{myData?.email}</h2>
+              <h1 className="md:text-xl font-semibold">Edit User Details</h1>
+              <h2 className="text-sm font-semibold text-neutral-400">
+                {myData?.email}
+              </h2>
             </div>
             <div className="font-semibold cursor-pointer" onClick={onClick}>
               <X />
             </div>
           </div>
           <div className="space-y-4">
-            {error && (
-              <p className="text-red-600 text-sm text-center">{error}</p>
-            )}
+              {error && (
+                <motion.p
+                  initial={{ opacity: 0, scale: 0 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0 }}
+                  className="text-red-600 text-sm text-center"
+                >
+                  {error}
+                </motion.p>
+              )}
             <div>
               <label htmlFor="name" className="text-sm">
                 Name

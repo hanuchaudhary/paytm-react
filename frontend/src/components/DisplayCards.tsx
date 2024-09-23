@@ -1,19 +1,8 @@
 import { CreditCard, Shield } from "lucide-react";
-// import { useState, useEffect } from "react";
 import { useGetBalance } from "../Hooks/Route";
 
 const DisplayCards = () => {
-  // const [refresh, setRefresh] = useState(false);
-  const { balance, loading } = useGetBalance();
-
-  // Auto-refresh every 30 seconds
-  // useEffect(() => {
-  //   const intervalId = setInterval(() => {
-  //     setRefresh((prev) => !prev); 
-  //   }, 30000); 
-    
-  //   return () => clearInterval(intervalId);
-  // }, []);
+  const { balance, loading  } = useGetBalance();
 
   return (
     <div className="grid md:grid-cols-2 gap-8 mb-12">
@@ -31,7 +20,9 @@ const DisplayCards = () => {
           </div>
           <CreditCard className="h-8 w-8 text-purple-200" />
         </div>
-        <p className="text-sm text-purple-200">Auto-updating every 30 seconds</p>
+        <p className="text-sm text-purple-200">
+          Auto-updating after transaction
+        </p>
       </div>
 
       <div className="bg-gradient-to-br md:block hidden from-green-500 to-teal-400 rounded-2xl p-6 shadow-lg">

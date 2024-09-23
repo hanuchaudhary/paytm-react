@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import LandingNavbar from "../components/LandingNavbar";
+import { motion } from "framer-motion";
 
 export default function LandingPage() {
   const featureCardData = [
@@ -44,17 +45,34 @@ export default function LandingPage() {
         <section className="pt-32 pb-20 px-6">
           <div className="container mx-auto text-center">
             <h1 className="text-5xl font-bold mb-6">
-              Simplify Your Payments with PayEase
+              {"Simplify Your Payments with rePAY".split(" ").map((e) => (
+                <motion.span
+                  whileHover={{ scale: 1.2, rotate: 2 }}
+                  className={`select-none hover:text-indigo-500 transition-colors duration-500`}
+                >
+                  {" "}
+                  {e}
+                </motion.span>
+              ))}
             </h1>
             <p className="text-xl mb-8 text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto">
-              Send money, pay bills, and manage your finances with ease. All in
-              one secure app.
+              {"Send money, pay bills, and manage your finances with ease. All in one secure app."
+                .split(" ")
+                .map((e) => (
+                  <span className="hover:text-indigo-500 font-semibold select-none transition-colors duration-500">
+                    {" "}
+                    {e}
+                  </span>
+                ))}
             </p>
-            <Link
-              to={"/signup"}
-              className="bg-indigo-500 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-indigo-600 transition duration-300 inline-flex items-center"
-            >
-              Get Started <ChevronRight className="ml-2 h-5 w-5" />
+            <Link to={"/signup"}>
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="bg-indigo-500 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-indigo-600 transition duration-300 inline-flex items-center"
+              >
+                Get Started <ChevronRight className="ml-2 h-5 w-5" />
+              </motion.div>
             </Link>
           </div>
         </section>
@@ -80,30 +98,35 @@ export default function LandingPage() {
             </div>
           </div>
         </section>
-
-        {/* CTA Section */}
-        <section className="py-20 bg-gradient-to-br from-purple-600 to-blue-500 text-white">
-          <div className="container mx-auto px-6 text-center">
-            <h2 className="text-3xl font-bold mb-4">
-              Ready to simplify your payments?
-            </h2>
-            <p className="mb-8 text-xl">
-              Join thousands of satisfied users and start using PayEase today.
-            </p>
-            <Link to={"/signup"}
-              className="bg-white text-indigo-500 px-8 py-3 rounded-lg text-lg font-semibold hover:bg-neutral-100 transition duration-300 inline-flex items-center"
-            >
-              Sign Up Now <ChevronRight className="ml-2 h-5 w-5" />
-            </Link>
-          </div>
-        </section>
       </main>
 
+      <motion.section
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        // whileHover={{scale : 0.55}}
+        transition={{duration: 1}}
+        className="py-20 bg-gradient-to-br from-purple-600 to-blue-500 text-white"
+      >
+        <div className="container mx-auto px-6 text-center">
+          <h2 className="text-3xl font-bold mb-4">
+            Ready to simplify your payments?
+          </h2>
+          <p className="mb-8 text-xl">
+            Join thousands of satisfied users and start using PayEase today.
+          </p>
+          <Link
+            to={"/signup"}
+            className="bg-white text-indigo-500 px-8 py-3 rounded-lg text-lg font-semibold hover:bg-neutral-100 transition duration-300 inline-flex items-center"
+          >
+            Sign Up Now <ChevronRight className="ml-2 h-5 w-5" />
+          </Link>
+        </div>
+      </motion.section>
       <footer className="dark:bg-neutral-800 bg-neutral-100 text-neutral-950 dark:text-white py-12">
         <div className="container mx-auto px-6">
           <div className="grid md:grid-cols-4 gap-8">
             <div>
-              <h3 className="text-lg font-semibold mb-4">PayEase</h3>
+              <h3 className="text-lg font-semibold mb-4">rePAY</h3>
               <p className="text-neutral-800">
                 Simplifying payments for everyone.
               </p>

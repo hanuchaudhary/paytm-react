@@ -1,26 +1,63 @@
-import express from "express";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import { PrismaClient } from "@prisma/client";
-import { signinValidation, signupValidation } from "../Validation";
-import dotenv from 'dotenv';
-import authMiddleware from "../middleware";
-dotenv.config();
+import { Hono } from 'hono';
+import bcrypt from 'bcryptjs';
+import { PrismaClient } from "@prisma/client/edge";
+import { withAccelerate } from "@prisma/extension-accelerate";
+import { verify, sign, jwt } from "hono/jwt";
+import { signinValidation, signupValidation } from '../Validation';
+import { Jwt } from 'hono/utils/jwt';
 
-export const userRouter = express.Router();
-const prisma = new PrismaClient();
+export const userRouter = new Hono<{
+    Bindings: {
+        DATABASE_URL: string,
+        JWT_SECRET: string,
+    },
+    Variables: {
+        userId: string,
+    },
 
-userRouter.post("/signup", async (req, res) => {
+}>();
+
+userRouter.use("/*", async (c, next) => {
+    const path = c.req.url;
+    if (path.includes("/signin") || path.includes("/signup")) {
+        await next();
+        return;
+    }
+    const authHeader = c.req.header("authorization") || "";
+
     try {
-        const { email, password, name } = req.body;
+        const userVerify = await verify(authHeader, c.env.JWT_SECRET);
 
-        const { success, error } = signupValidation.safeParse({ email, password, name });
-        if (!success) {
-            return res.status(400).json({
+        if (userVerify) {
+            c.set("userId", userVerify.id as string);
+            await next();
+        } else {
+            c.status(403);
+            return c.json({ msg: "Invalid token!!!" });
+        }
+
+    } catch (err) {
+        c.status(403);
+        return c.json({ msg: "Invalid or expired token!!!" });
+    }
+});
+
+
+
+userRouter.post('/signup', async (c) => {
+    const prisma = new PrismaClient({
+        datasourceUrl: c.env.DATABASE_URL,
+    }).$extends(withAccelerate())
+    try {
+        const { email, password, name } = await c.req.json();
+
+        const validation = signupValidation.safeParse({ email, password, name });
+        if (!validation.success) {
+            return c.json({
                 success: false,
-                message: "Validation Error",
-                error: error.errors
-            });
+                message: 'Validation Error',
+                error: validation.error.errors,
+            }, 400);
         }
 
         const userExist = await prisma.user.findUnique({
@@ -28,70 +65,69 @@ userRouter.post("/signup", async (req, res) => {
             select: {
                 email: true,
                 id: true,
-                name: true
-            }
+                name: true,
+            },
         });
         if (userExist) {
-            return res.status(409).json({
+            return c.json({
                 success: false,
-                message: "User already exists",
-            });
+                message: 'User already exists',
+            }, 409);
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
-
         const user = await prisma.user.create({
             data: {
-                email: email,
+                email,
                 password: hashedPassword,
-                name: name,
+                name,
                 balance: {
                     create: {
-                        balance: 1 + Math.random() * 10000
-                    }
-                }
-            }, select: {
+                        balance: 1 + Math.random() * 10000,
+                    },
+                },
+            },
+            select: {
                 id: true,
                 email: true,
                 name: true,
-                balance: true
-            }
+                balance: true,
+            },
         });
 
-        const tokenData = {
-            id: user.id,
-            email: user.email,
-            name: user.name
-        }
-        const token = jwt.sign(tokenData, process.env.JWT_SECRET as string, { expiresIn: "1h" })
+        const data = { id: user.id, email: user.email, name: user.name }
+        const token = await Jwt.sign(data, c.env.JWT_SECRET)
 
-        return res.status(201).json({
+        return c.json({
             success: true,
-            message: "User created successfully",
-            user: user,
-            token: token
-        });
-
+            message: 'User created successfully',
+            user,
+            token,
+        }, 201);
     } catch (error: any) {
-        res.status(500).json({
+        return c.json({
             success: false,
-            message: "Server error during user creation",
-            error: error.message
-        });
+            message: 'Server error during user creation',
+            error: error.message,
+        }, 500);
     }
 });
 
-userRouter.post("/signin", async (req, res) => {
+// User Signin
+userRouter.post('/signin', async (c) => {
+    const prisma = new PrismaClient({
+        datasourceUrl: c.env.DATABASE_URL,
+    }).$extends(withAccelerate())
     try {
-        const { email, password } = req.body;
+        const { email, password } = await c.req.json();
 
-        const { success, error } = signinValidation.safeParse({ email, password });
-        if (!success) {
-            return res.status(400).json({
+        const validation = signinValidation.safeParse({ email, password });
+        if (!validation.success) {
+            return c.json({
                 success: false,
-                message: "Validation Error",
-                error: error.errors
-            });
+                message: 'Validation Error',
+                error: validation.error.errors,
+            }, 400);
         }
 
         const user = await prisma.user.findUnique({
@@ -101,159 +137,162 @@ userRouter.post("/signin", async (req, res) => {
                 id: true,
                 name: true,
                 password: true,
-                balance: true
-            }
+                balance: true,
+            },
         });
+
         if (!user) {
-            return res.status(409).json({
+            return c.json({
                 success: false,
-                message: "User Not exists",
-            });
+                message: 'User not found',
+            }, 409);
         }
 
-        const unHashedPassword = await bcrypt.compare(password, user.password);
-        if (!unHashedPassword) {
-            return res.status(401).json({
+        const validPassword = await bcrypt.compare(password, user.password);
+        if (!validPassword) {
+            return c.json({
                 success: false,
-                message: "Password Not Matched!!",
-            });
+                message: 'Password does not match',
+            }, 401);
         }
 
-        const tokenData = {
-            id: user.id,
-            email: user.email,
-            name: user.name
-        }
-        const token = jwt.sign(tokenData, process.env.JWT_SECRET as string, { expiresIn: "1h" })
+        const data = { id: user.id, email: user.email, name: user.name }
+        const token = await Jwt.sign(data, c.env.JWT_SECRET)
 
-        return res.status(201).json({
+        return c.json({
             success: true,
-            message: "User Fetched successfully",
-            token: token,
+            message: 'User signed in successfully',
+            token,
             user: {
                 id: user.id,
                 email: user.email,
-                name: user.name
-            }
-        });
-
+                name: user.name,
+            },
+        }, 200);
     } catch (error: any) {
-        res.status(500).json({
+        return c.json({
             success: false,
-            message: "Server error during user Signin",
-            error: error.message
-        });
+            message: 'Server error during user signin',
+            error: error.message,
+        }, 500);
     }
 });
 
-userRouter.get("/bulk", authMiddleware, async (req, res) => {
+// Fetch bulk users
+userRouter.get('/bulk', async (c) => {
+    const prisma = new PrismaClient({
+        datasourceUrl: c.env.DATABASE_URL,
+    }).$extends(withAccelerate())
     try {
-        const filter = typeof req.query.filter === "string" ? req.query.filter : "";
+        const filter = c.req.query('filter') || '';
 
-        const allUsers = await prisma.user.findMany({
+        const users = await prisma.user.findMany({
             where: {
                 OR: [
-                    { name: { contains: filter, mode: "insensitive" } },
-                    { email: { contains: filter, mode: "insensitive" } }
-                ]
+                    { name: { contains: filter, mode: 'insensitive' } },
+                    { email: { contains: filter, mode: 'insensitive' } },
+                ],
             },
             select: {
-                email: true,
                 id: true,
                 name: true,
-                balance: true
-            }
+                email: true,
+                balance: true,
+            },
         });
 
-        if (allUsers.length === 0) {
-            return res.status(200).json({
+        return c.json({
+            success: true,
+            message: 'Users fetched successfully',
+            users,
+        }, 200);
+    } catch (error: any) {
+        return c.json({
+            success: false,
+            message: 'Server error during fetching users',
+            error: error.message,
+        }, 500);
+    }
+});
+
+
+userRouter.get('/me', async (c) => {
+    const prisma = new PrismaClient({
+        datasourceUrl: c.env.DATABASE_URL,
+    }).$extends(withAccelerate());
+
+    try {
+        const userId = c.get("userId");
+        const user = await prisma.user.findUnique({
+            where: { id: userId },
+            select: {
+                id: true,
+                name: true,
+                email: true,
+            },
+        });
+
+        if (!user) {
+            return c.json({
                 success: false,
-                message: "No users found",
-                users: []
-            });
+                message: 'User not found',
+            }, 404);
         }
 
-        return res.status(200).json({
+        return c.json({
             success: true,
-            message: "Users fetched successfully",
-            users: allUsers
-        });
+            user,
+        }, 200);
 
     } catch (error: any) {
-        res.status(500).json({
+        return c.json({
             success: false,
-            message: "Server error during fetching users",
-            error: error.message
-        });
+            message: 'Server error during fetching user',
+            error: error.message,
+        }, 500);
     }
 });
 
-userRouter.get("/me", authMiddleware, async (req, res) => {
+
+// Delete a user
+userRouter.post('/remove', async (c) => {
+    const prisma = new PrismaClient({
+        datasourceUrl: c.env.DATABASE_URL,
+    }).$extends(withAccelerate())
     try {
-        const userId = req.userId as string;
-        const user = await prisma.user.findUnique({
-            where: {
-                id: userId
-            },
-            select: {
-                id: true,
-                name: true,
-                email: true,
-            }
-        })
-
-        res.status(200).json({
-            user
-        })
-
-    } catch (error: any) {
-        res.status(500).json({
-            success: false,
-            message: "Server error during fetching users",
-            error: error.message
-        });
-    }
-});
-
-userRouter.post("/remove", authMiddleware, async (req, res) => {
-    try {
-        const userId = req.userId;
+        const userId = c.get('userId');
         if (!userId) {
-            return res.status(400).json({
+            return c.json({
                 success: false,
-                message: "User ID is required",
-            });
+                message: 'User ID is required',
+            }, 400);
         }
 
         await prisma.user.delete({
-            where: { id: userId }
-        })
+            where: { id: userId },
+        });
 
-        return res.status(200).json({
+        return c.json({
             success: true,
-            message: "User Deleted successfully!!",
-        });
-
+            message: 'User deleted successfully',
+        }, 200);
     } catch (error: any) {
-        res.status(500).json({
+        return c.json({
             success: false,
-            message: "Server error during deleting user",
-            error: error.message
-        });
+            message: 'Server error during deleting user',
+            error: error.message,
+        }, 500);
     }
-})
+});
 
-userRouter.put("/update", authMiddleware, async (req, res) => {
+// Update user details
+userRouter.put('/update', async (c) => {
+    const prisma = new PrismaClient({
+        datasourceUrl: c.env.DATABASE_URL,
+    }).$extends(withAccelerate())
     try {
-        const userId = req.userId;
-        const {name , password} = req.body;
-        if (!userId) {
-            return res.status(400).json({
-                success: false,
-                message: "User ID is required",
-            });
-        }
-
+        const userId = c.get("userId");
+        const { name, password } = await c.req.json();
 
         const updateData: any = {};
         if (name) updateData.name = name;
@@ -261,20 +300,24 @@ userRouter.put("/update", authMiddleware, async (req, res) => {
 
         const updatedUser = await prisma.user.update({
             where: { id: userId },
-            data: updateData
-        })
+            data: updateData,
+        });
 
-        return res.status(200).json({
+        return c.json({
             success: true,
-            message: "User Updated successfully!!",
-            user: updatedUser
-        });
-
+            message: 'User updated successfully',
+            user: updatedUser,
+        }, 200);
     } catch (error: any) {
-        res.status(500).json({
+        return c.json({
             success: false,
-            message: "Server error during updating user",
-            error: error.message
-        });
+            message: 'Server error during updating user',
+            error: error.message,
+        }, 500);
     }
-})
+});
+
+
+
+
+export default userRouter;

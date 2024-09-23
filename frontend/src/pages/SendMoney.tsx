@@ -74,6 +74,7 @@ const SendMoneyModal = ({
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
+            transition={{ease : "easeInOut"}}
             exit={{ opacity: 0, scale: 0.8 }}
             className="bg-white mx-4 p-4 dark:bg-neutral-800 dark:text-white rounded-lg w-full max-w-md md:p-6"
           >

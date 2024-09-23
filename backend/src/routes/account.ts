@@ -1,17 +1,50 @@
-import express from "express";
-import jwt from "jsonwebtoken";
-import authMiddleware from "../middleware";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client/edge";
+import bcrypt from 'bcryptjs';
+import { withAccelerate } from "@prisma/extension-accelerate";
+import { Hono } from "hono";
+import { verify } from "hono/jwt";
 
-const prisma = new PrismaClient();
-export const accountRouter = express.Router();
+export const accountRouter = new Hono<{
+    Bindings: {
+        DATABASE_URL: string;
+        JWT_SECRET: string;
+    },
+    Variables: {
+        userId: string,
+    },
+}>();
 
-accountRouter.get("/balance", authMiddleware, async (req, res) => {
+
+accountRouter.use("/*", async (c, next) => {
+    const authHeader = c.req.header("authorization") || "";
+
     try {
-        const userId = req.userId;
+        const userVerify = await verify(authHeader, c.env.JWT_SECRET);
+
+        if (userVerify) {
+            c.set("userId", userVerify.id as string);
+            await next();
+        } else {
+            c.status(403);
+            return c.json({ msg: "Invalid token!!!" });
+        }
+
+    } catch (err) {
+        c.status(403);
+        return c.json({ msg: "Invalid or expired token!!!" });
+    }
+});
+
+accountRouter.get("/balance", async (c) => {
+    const prisma = new PrismaClient({
+        datasourceUrl: c.env.DATABASE_URL,
+    }).$extends(withAccelerate())
+    try {
+        const userId = c.get("userId");
 
         if (!userId) {
-            return res.status(400).json({
+            c.status(400)
+            return c.json({
                 success: false,
                 message: "User ID not found in request"
             });
@@ -34,35 +67,41 @@ accountRouter.get("/balance", authMiddleware, async (req, res) => {
         });
 
         if (!user) {
-            return res.status(404).json({
+            c.status(404)
+            return c.json({
                 success: false,
                 message: "Balance not found for the user"
             });
         }
 
-        res.json({
+        return c.json({
             success: true,
             balance: user.balance,
             userDetails: user
         });
 
     } catch (error: any) {
-        res.status(500).json({
+        c.status(500)
+        return c.json({
             success: false,
             message: "Error fetching balance",
             error: error.message
         });
     }
 });
-accountRouter.post("/transfer", authMiddleware, async (req, res) => {
-    const { amount, to } = req.body;
+
+accountRouter.post("/transfer", async (c) => {
+    const prisma = new PrismaClient({
+        datasourceUrl: c.env.DATABASE_URL,
+    }).$extends(withAccelerate())
+    const { amount, to } = await c.req.json();
 
     try {
         const result = await prisma.$transaction(async (prisma) => {
             //sendr acc
             const account = await prisma.account.findUnique({
                 where: {
-                    userId: req.userId
+                    userId: c.get("userId")
                 }
             });
 
@@ -86,7 +125,7 @@ accountRouter.post("/transfer", authMiddleware, async (req, res) => {
             }
 
             await prisma.account.update({
-                where: { userId: req.userId },
+                where: { userId: c.get("userId") },
                 data: {
                     balance: {
                         decrement: amount
@@ -106,10 +145,12 @@ accountRouter.post("/transfer", authMiddleware, async (req, res) => {
             return { success: true, message: "Transfer successful" };
         });
 
-        return res.status(200).json(result);
+        c.status(200)
+        return c.json(result);
 
     } catch (error: any) {
-        return res.status(400).json({
+        c.status(400)
+        return c.json({
             success: false,
             message: error.message,
         });
