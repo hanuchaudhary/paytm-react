@@ -41,7 +41,7 @@ const Card = ({ name, email, id }: cardInterface) => {
           whileHover={{ scale: 1.05 }}
           transition={{ease : "easeInOut"}}
           onClick={() => setClose(true)}
-          className="md:px-4 px-2 py-2 text-sm md:text-base bg-gradient-to-br from-green-600 to-teal-500 text-white rounded-lg transition-colors duration-500"
+          className="md:px-4 px-2 py-2 text-xs font-semibold md:text-base bg-gradient-to-br from-green-600 to-teal-500 text-white rounded-lg transition-colors duration-500"
         >
           Send Money
         </motion.button>

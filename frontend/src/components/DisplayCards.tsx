@@ -1,5 +1,5 @@
 import { CreditCard, Shield } from "lucide-react";
-import { useGetBalance } from "../Hooks/Route";
+import { useGetBalance } from "../Hooks/Hooks";
 
 const DisplayCards = () => {
   const { balance, loading  } = useGetBalance();

@@ -3,37 +3,65 @@ import Signup from "./pages/Signup";
 import Signin from "./pages/Signin";
 import Landing from "./pages/Landing";
 import Dashboard from "./pages/Dashboard";
+import NotFound from "./pages/NotFound";
 import { AnimatePresence, motion } from "framer-motion";
+import { ThemeProvider } from "./providers/LocalThemeProvider";
 
 const App = () => {
   const location = useLocation();
-  localStorage.setItem("theme", "dark");
   return (
-    <div className="light">
-      <AnimatePresence mode="wait" initial={false}>
-        <Routes location={location} key={location.pathname}>
-          <Route path="/" element={<Landing />} />
-          <Route
-            path="/signup"
-            element={
-              <PageTransition>
-                <Signup />
-              </PageTransition>
-            }
-          />
-          <Route
-            path="/signin"
-            element={
-              <PageTransition>
-                <Signin />
-              </PageTransition>
-            }
-          />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/dashboard/edit" element={<Dashboard />} />
-        </Routes>
-      </AnimatePresence>
-    </div>
+    <AnimatePresence mode="wait" initial={false}>
+      <Routes location={location} key={location.pathname}>
+        <Route
+          path="/"
+          element={
+            <PageTransition>
+              <Landing />
+            </PageTransition>
+          }
+        />
+        <Route
+          path="/signup"
+          element={
+            <PageTransition>
+              <Signup />
+            </PageTransition>
+          }
+        />
+        <Route
+          path="/signin"
+          element={
+            <PageTransition>
+              <Signin />
+            </PageTransition>
+          }
+        />
+        <Route
+          path="/dashboard"
+          element={
+            <PageTransition>
+              <Dashboard />
+            </PageTransition>
+          }
+        />
+        <Route
+          path="/dashboard/edit"
+          element={
+            <PageTransition>
+              <Dashboard />
+            </PageTransition>
+          }
+        />
+        <Route
+          path="*"
+          element={
+            <PageTransition>
+              <NotFound />
+            </PageTransition>
+          }
+        />
+      </Routes>
+    </AnimatePresence>
   );
 };
 
@@ -52,9 +80,11 @@ const PageTransition = ({ children }: { children: React.ReactNode }) => {
 
 const WrappedApp = () => {
   return (
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <ThemeProvider>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </ThemeProvider>
   );
 };
 

@@ -33,6 +33,7 @@ const SendMoneyModal = ({
     }
     setError(null);
     try {
+      const token = localStorage.getItem("token")?.split(" ")[1];
       await axios.post(
         `${SERVER_URL}/api/v1/account/transfer`,
         {
@@ -41,7 +42,7 @@ const SendMoneyModal = ({
         },
         {
           headers: {
-            Authorization: localStorage.getItem("token"),
+            Authorization: token,
           },
         }
       );
@@ -80,7 +81,7 @@ const SendMoneyModal = ({
           >
             <div className="flex justify-between items-center">
               <h2 className="text-xl font-semibold capitalize">
-                Send Money to {name}
+                Send Money to
               </h2>
               <button onClick={onClose}>
                 <X className="h-6 w-6 text-neutral-600 hover:text-neutral-500" />

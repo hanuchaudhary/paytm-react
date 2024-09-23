@@ -24,7 +24,7 @@ userRouter.use("/*", async (c, next) => {
         return;
     }
     const authHeader = c.req.header("authorization") || "";
-
+    
     try {
         const userVerify = await verify(authHeader, c.env.JWT_SECRET);
 

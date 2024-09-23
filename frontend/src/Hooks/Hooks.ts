@@ -17,10 +17,11 @@ export const useAllUsers = () => {
 
   useEffect(() => {
     try {
+      const token = localStorage.getItem("token")?.split(" ")[1];
       const fetchData = async () => {
         const response = await axios.get(`${SERVER_URL}/api/v1/user/bulk?filter=${filter}`, {
           headers: {
-            Authorization: localStorage.getItem("token")
+            Authorization: token
           }
         })
         setData(response.data.users)
@@ -44,12 +45,13 @@ interface MeInterface {
 
 export const useProfile = () => {
   const [myData, setMyData] = useState<MeInterface | null>(null);
+  const token = localStorage.getItem("token")?.split(" ")[1]
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(`${SERVER_URL}/api/v1/user/me`, {
           headers: {
-            Authorization: localStorage.getItem("token") || "",
+            Authorization: token,
           },
         });
         setMyData(response.data.user);
@@ -59,7 +61,7 @@ export const useProfile = () => {
     };
 
     fetchData();
-  }, [SERVER_URL , myData?.name]);
+  }, [SERVER_URL, myData?.name]);
 
   return { myData };
 };
@@ -67,13 +69,13 @@ export const useProfile = () => {
 export const useGetBalance = () => {
   const [loading, setLoading] = useState(true);
   const [balance, setBalance] = useState(0);
-
+  const token = localStorage.getItem("token")?.split(" ")[1];
   useEffect(() => {
     const fetchBalance = async () => {
       try {
         const response = await axios.get(`${SERVER_URL}/api/v1/account/balance`, {
           headers: {
-            Authorization: localStorage.getItem("token"),
+            Authorization: token,
           },
         });
         setBalance(response.data.balance);

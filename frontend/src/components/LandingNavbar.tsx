@@ -1,18 +1,10 @@
 import { motion } from "framer-motion";
 import { Moon, Sun } from "lucide-react";
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useTheme } from "../providers/LocalThemeProvider";
 
 const LandingNavbar = () => {
-  const [theme, setTheme] = useState("dark");
-
-  useEffect(() => {
-    document.documentElement.classList.toggle("dark", theme === "dark");
-  }, [theme]);
-
-  const toggleTheme = () => {
-    setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
-  };
+  const { theme, toggleTheme } = useTheme();
   return (
     <div>
       <header className="fixed md:w-[90%] w-[94%] md:top-5 top-2 left-3 md:left-16 border-2 z-50 dark:border-neutral-800 dark:bg-opacity-40 dark:backdrop-filter dark:backdrop-blur-md backdrop-filter backdrop-blur-md bg-opacity-40 border-neutral-50 rounded-xl bg-neutral-100 dark:bg-neutral-800 shadow-md py-4">
@@ -50,12 +42,14 @@ const LandingNavbar = () => {
               )}
               <span className="sr-only">Toggle theme</span>
             </button>
-            <Link
-              to={"/signup"}
-              
-            >
-              <motion.div whileHover={{scale : 1.05}}
-              whileTap={{scale : 0.95}} className="bg-gradient-to-br from-purple-600 to-blue-500 text-white px-4 py-2 rounded-lg hover:bg-indigo-600 transition duration-300">Sign Up</motion.div>
+            <Link to={"/signup"}>
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="bg-gradient-to-br from-purple-600 to-blue-500 text-white px-4 py-2 rounded-lg hover:bg-indigo-600 transition duration-300"
+              >
+                Sign Up
+              </motion.div>
             </Link>
           </div>
         </div>

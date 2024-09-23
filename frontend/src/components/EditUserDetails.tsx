@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import Button from "./Button";
 import { X } from "lucide-react";
 import { SERVER_URL } from "../config";
-import { useProfile } from "../Hooks/Route";
+import { useProfile } from "../Hooks/Hooks";
 
 const EditUserDetails = ({ onClick }: { onClick: () => void }) => {
   const { myData } = useProfile();
