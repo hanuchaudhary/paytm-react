@@ -44,11 +44,22 @@ interface MeInterface {
 }
 
 export const useProfile = () => {
+  const [myData, setMyData] = useState<MeInterface | null>(() => {
+    const savedData = localStorage.getItem("profileData");
+    return savedData ? JSON.parse(savedData) : null;
+  });
 
-  const [myData, setMyData] = useState<MeInterface | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const token = localStorage.getItem("token")?.split(" ")[1]
+  const [error, setError] = useState<string | null>(null);
+
+  const token = localStorage.getItem("token")?.split(" ")[1];
+
   useEffect(() => {
+    if (myData) {
+      setLoading(false);
+      return;
+    }
+
     const fetchData = async () => {
       try {
         const response = await axios.get(`${SERVER_URL}/api/v1/user/me`, {
@@ -57,23 +68,30 @@ export const useProfile = () => {
           },
         });
         setMyData(response.data.user);
+
+        localStorage.setItem("profileData", JSON.stringify(response.data.user));
         setLoading(false);
       } catch (error: any) {
-        setLoading(true)
+        setLoading(false);
+        setError("Failed to fetch profile data");
         console.error("Error fetching profile data:", error);
       }
     };
 
-    fetchData();
-  }, [SERVER_URL, myData?.name]);
+    if (!myData) {
+      fetchData();
+    }
+  }, [token]);
 
-  return { myData , loading };
+  return { myData, loading, error };
 };
+
 
 export const useGetBalance = () => {
   const [loading, setLoading] = useState(true);
   const [balance, setBalance] = useState(0);
   const token = localStorage.getItem("token")?.split(" ")[1];
+
   useEffect(() => {
     const fetchBalance = async () => {
       try {
@@ -84,14 +102,18 @@ export const useGetBalance = () => {
         });
         setBalance(response.data.balance);
       } catch (error) {
-        console.log("Error fetching balance:", error);
+        console.error("Error fetching balance:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchBalance();
-  }, []);
+    fetchBalance(); 
+
+    const intervalId = setInterval(fetchBalance, 30000); 
+    return () => clearInterval(intervalId);
+  }, [token]); 
 
   return { balance, loading };
 };
+

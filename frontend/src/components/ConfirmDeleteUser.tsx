@@ -24,6 +24,7 @@ const ConfirmDeleteUser = ({ onClick }: { onClick: () => void }) => {
         }
       );
       localStorage.removeItem("token");
+      localStorage.removeItem("profileData");
       navigate("/signup");
     } catch (error) {
       setLoading(false);

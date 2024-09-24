@@ -12,22 +12,20 @@ const DashboardFooter = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("profileData");
     navigate("/");
   };
 
   const handleEditDetailsClick = () => {
-    // Change route to /dashboard/edit
     navigate("/dashboard/edit");
   };
 
-  // Open dialog when the route is /dashboard/edit
   useEffect(() => {
     if (location.pathname === "/dashboard/edit") {
       setEditUserDetailsMenu(true);
     }
   }, [location]);
 
-  // Close dialog and navigate back to /dashboard
   const handleCloseEditDetails = () => {
     setEditUserDetailsMenu(false);
     navigate("/dashboard");
@@ -45,8 +43,7 @@ const DashboardFooter = () => {
       {editUserDetailsMenu && (
         <div className="flex items-center justify-center fixed z-50 top-0 left-0">
           <EditUserDetails
-            onClick={handleCloseEditDetails} // Close modal and go back to /dashboard
-          />
+            onClick={handleCloseEditDetails} />
         </div>
       )}
       <div className="bg-white transition-colors duration-500 dark:bg-neutral-800 rounded-2xl p-6 shadow-lg">

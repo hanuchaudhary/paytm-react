@@ -22,7 +22,7 @@ const DisplayCards = () => {
           <CreditCard className="h-8 w-8 text-purple-200" />
         </div>
         <p className="text-sm text-purple-200">
-          Auto-updating after transaction
+          Auto-updating after 30-Seconds
         </p>
       </div>
 
