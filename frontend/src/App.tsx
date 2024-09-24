@@ -1,4 +1,10 @@
-import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
+import {
+  BrowserRouter,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import Signup from "./pages/Signup";
 import Signin from "./pages/Signin";
 import Landing from "./pages/Landing";
@@ -6,9 +12,20 @@ import Dashboard from "./pages/Dashboard";
 import { NotFound } from "./pages/NotFound";
 import { AnimatePresence, motion } from "framer-motion";
 import { ThemeProvider } from "./providers/LocalThemeProvider";
+import { useEffect } from "react";
 
 const App = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const pathsToRedirect = ["/", "/signup", "/signin"];
+    const token = localStorage.getItem("token");
+    if (token && pathsToRedirect.includes(location.pathname)) {
+      navigate("/dashboard");
+    }
+  }, [navigate]);
+
   return (
     <AnimatePresence mode="wait" initial={false}>
       <Routes location={location} key={location.pathname}>

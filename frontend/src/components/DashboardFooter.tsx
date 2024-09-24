@@ -17,6 +17,8 @@ const DashboardFooter = () => {
   };
 
   const handleEditDetailsClick = () => {
+    console.log("kalik");
+    
     navigate("/dashboard/edit");
   };
 

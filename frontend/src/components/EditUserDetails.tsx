@@ -14,14 +14,14 @@ interface EditUserDetailsProps {
 const EditUserDetails: React.FC<EditUserDetailsProps> = ({ onClick }) => {
   const { myData } = useProfile();
   const navigate = useNavigate();
-  
+
   const [formData, setFormData] = useState({
     name: myData?.name || "",
     password: "",
   });
-  
+
   const [loading, setLoading] = useState<boolean>(false);
-  
+
   const [error, setError] = useState<string | null>(null);
 
   const handleUpdateUser = async () => {
@@ -33,7 +33,7 @@ const EditUserDetails: React.FC<EditUserDetailsProps> = ({ onClick }) => {
     const token = localStorage.getItem("token")?.split(" ")[1];
 
     try {
-      setLoading(true); 
+      setLoading(true);
       await axios.put(
         `${SERVER_URL}/api/v1/user/update`,
         { name: formData.name, password: formData.password },
@@ -44,12 +44,19 @@ const EditUserDetails: React.FC<EditUserDetailsProps> = ({ onClick }) => {
         }
       );
 
+      // Retrieve the user object from local storage
+      const userJson = localStorage.getItem("profileData");
+      // @ts-ignore
+      let user = JSON.parse(userJson);
+      user.name = formData.name;
+      localStorage.setItem("profileData", JSON.stringify(user));
+
       navigate("/dashboard");
     } catch (err) {
       setError("Failed to update details");
       console.error(err);
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
@@ -74,7 +81,6 @@ const EditUserDetails: React.FC<EditUserDetailsProps> = ({ onClick }) => {
             </div>
           </div>
           <div className="space-y-4">
-
             {error && (
               <motion.p
                 initial={{ opacity: 0, scale: 0 }}
@@ -123,7 +129,7 @@ const EditUserDetails: React.FC<EditUserDetailsProps> = ({ onClick }) => {
                 classname="bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500"
                 label={loading ? "Updating..." : "Update"}
                 onClick={handleUpdateUser}
-                disabled={loading} 
+                disabled={loading}
               />
             </div>
           </div>
