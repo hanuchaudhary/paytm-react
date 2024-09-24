@@ -7,39 +7,49 @@ import { X } from "lucide-react";
 import { SERVER_URL } from "../config";
 import { useProfile } from "../Hooks/Hooks";
 
-const EditUserDetails = ({ onClick }: { onClick: () => void }) => {
+interface EditUserDetailsProps {
+  onClick: () => void;
+}
+
+const EditUserDetails: React.FC<EditUserDetailsProps> = ({ onClick }) => {
   const { myData } = useProfile();
   const navigate = useNavigate();
+  
   const [formData, setFormData] = useState({
     name: myData?.name || "",
     password: "",
   });
-  const [loading, setLoading] = useState(false);
+  
+  const [loading, setLoading] = useState<boolean>(false);
+  
   const [error, setError] = useState<string | null>(null);
 
   const handleUpdateUser = async () => {
-    if (!formData.name) {
-      setError("Name cannot be empty");
+    if (!formData.name && !formData.password) {
+      setError("Fields cannot be empty");
       return;
     }
 
+    const token = localStorage.getItem("token")?.split(" ")[1];
+
     try {
-      setLoading(true);
+      setLoading(true); 
       await axios.put(
         `${SERVER_URL}/api/v1/user/update`,
         { name: formData.name, password: formData.password },
         {
           headers: {
-            Authorization: localStorage.getItem("token"),
+            Authorization: token,
           },
         }
       );
+
       navigate("/dashboard");
     } catch (err) {
       setError("Failed to update details");
-      console.log(err);
+      console.error(err);
     } finally {
-      setLoading(false);
+      setLoading(false); 
     }
   };
 
@@ -64,16 +74,18 @@ const EditUserDetails = ({ onClick }: { onClick: () => void }) => {
             </div>
           </div>
           <div className="space-y-4">
-              {error && (
-                <motion.p
-                  initial={{ opacity: 0, scale: 0 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0 }}
-                  className="text-red-600 text-sm text-center"
-                >
-                  {error}
-                </motion.p>
-              )}
+
+            {error && (
+              <motion.p
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0 }}
+                className="text-red-600 text-sm bg-red-200 rounded-md py-2 font-semibold text-center"
+              >
+                {error}
+              </motion.p>
+            )}
+
             <div>
               <label htmlFor="name" className="text-sm">
                 Name
@@ -89,6 +101,7 @@ const EditUserDetails = ({ onClick }: { onClick: () => void }) => {
                 placeholder="Enter your name"
               />
             </div>
+
             <div>
               <label htmlFor="password" className="text-sm">
                 New Password
@@ -104,12 +117,13 @@ const EditUserDetails = ({ onClick }: { onClick: () => void }) => {
                 placeholder="Enter your new password"
               />
             </div>
+
             <div className="mt-6">
               <Button
                 classname="bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500"
                 label={loading ? "Updating..." : "Update"}
                 onClick={handleUpdateUser}
-                // disabled={loading}
+                disabled={loading} 
               />
             </div>
           </div>

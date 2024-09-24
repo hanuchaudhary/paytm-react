@@ -4,6 +4,7 @@ import axios from "axios";
 import { useState } from "react";
 import TransactionCompleted from "../components/TransactionCompleted";
 import { AnimatePresence, motion } from "framer-motion";
+import Button from "../components/Button";
 
 interface SendMoneyModalProps {
   id: string;
@@ -21,6 +22,7 @@ const SendMoneyModal = ({
   email,
 }: SendMoneyModalProps) => {
   const [amount, setAmount] = useState<number | string>("");
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
@@ -33,6 +35,7 @@ const SendMoneyModal = ({
     }
     setError(null);
     try {
+      setLoading(true)
       const token = localStorage.getItem("token")?.split(" ")[1];
       await axios.post(
         `${SERVER_URL}/api/v1/account/transfer`,
@@ -54,6 +57,7 @@ const SendMoneyModal = ({
         onClose();
       }, 2000);
     } catch (error: any) {
+      setLoading(false);
       setError("Error sending money. " + error.response.data.message);
     }
   };
@@ -75,7 +79,7 @@ const SendMoneyModal = ({
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ease : "easeInOut"}}
+            transition={{ ease: "easeInOut" }}
             exit={{ opacity: 0, scale: 0.8 }}
             className="bg-white mx-4 p-4 dark:bg-neutral-800 dark:text-white rounded-lg w-full max-w-md md:p-6"
           >
@@ -122,12 +126,11 @@ const SendMoneyModal = ({
             </div>
 
             <div className="text-center">
-              <button
+              <Button
+                label={loading ? "Sending Money..." : "Send Money"}
                 onClick={handleSendMoney}
-                className="w-full bg-gradient-to-br from-purple-600 to-blue-500 text-white font-semibold py-2 rounded-lg hover:bg-blue-600 transition duration-200"
-              >
-                Send Money
-              </button>
+                disabled={loading}
+              />
             </div>
           </motion.div>
         )}

@@ -28,7 +28,7 @@ const Nav = () => {
             </button>
             <div className="relative">
               <button className="flex items-center space-x-2 p-2 rounded-full bg-neutral-300 dark:bg-neutral-700 dark:bg-opacity-55 hover:bg-neutral-400 dark:hover:bg-neutral-600 dark:backdrop-filter dark:backdrop-blur-sm backdrop-filter backdrop-blur-md bg-opacity-55 transition duration-300">
-                <h1 className="h-7 w-7 flex items-center justify-center font-semibold">
+                <h1 className="h-7 uppercase w-7 flex items-center justify-center font-semibold">
                   {myData?.name.split(" ").map((e) => e[0])}
                 </h1>
                 <span className="sr-only">User menu</span>

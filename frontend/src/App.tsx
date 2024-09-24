@@ -12,12 +12,7 @@ const App = () => {
   return (
     <AnimatePresence mode="wait" initial={false}>
       <Routes location={location} key={location.pathname}>
-        <Route
-          path="/"
-          element={
-              <Landing />
-          }
-        />
+        <Route path="/" element={<Landing />} />
         <Route
           path="/signup"
           element={
@@ -34,20 +29,8 @@ const App = () => {
             </PageTransition>
           }
         />
-        <Route
-          path="/dashboard"
-          element={
-              <Dashboard />
-          }
-        />
-        <Route
-          path="/dashboard/edit"
-          element={
-            <PageTransition>
-              <Dashboard />
-            </PageTransition>
-          }
-        />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/dashboard/edit" element={<Dashboard />} />
         <Route
           path="*"
           element={
