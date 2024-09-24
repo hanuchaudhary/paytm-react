@@ -9,7 +9,7 @@ import Spinner from "../components/Spinner";
 
 export default function Dashboard() {
   const { data, setFilter } = useAllUsers();
-  const { myData ,loading } = useProfile();
+  const { myData, loading } = useProfile();
   const token = localStorage.getItem("token");
 
   const filterData = data.filter((item) => item.id != myData?.id);
@@ -28,7 +28,11 @@ export default function Dashboard() {
               Welcome back,
               <span className="text-2xl capitalize text-neutral-400">
                 {" "}
-                {loading ? <Spinner label="Fetching your Name"/> : myData?.name}
+                {loading ? (
+                  <Spinner label="Fetching your Name" />
+                ) : (
+                  myData?.name
+                )}
               </span>
             </h1>
           </div>
@@ -53,11 +57,15 @@ export default function Dashboard() {
             </div>
           </div>
           <div className="space-y-4 max-h-[70vh] overflow-y-scroll custom-scrollbar">
-            {filterData.map((user) => (
-              <div key={user.id}>
-                <Card id={user.id} name={user.name} email={user.email} />
-              </div>
-            ))}
+            {filterData.length > 0 ? ( 
+              filterData.map((user) => (
+                <div key={user.id}>
+                  <Card id={user.id} name={user.name} email={user.email} />
+                </div>
+              ))
+            ) : (
+              <div className="font-semibold">No user found...</div>
+            )}
           </div>
         </div>
 

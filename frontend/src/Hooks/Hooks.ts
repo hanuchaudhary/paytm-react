@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { SERVER_URL } from "../config";
 
 interface usersInterface {
@@ -92,28 +92,29 @@ export const useGetBalance = () => {
   const [balance, setBalance] = useState(0);
   const token = localStorage.getItem("token")?.split(" ")[1];
 
+  const fetchBalance = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`${SERVER_URL}/api/v1/account/balance`, {
+        headers: {
+          Authorization: token,
+        },
+      });
+      setBalance(response.data.balance);
+    } catch (error) {
+      console.log("Error fetching balance:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, [token]);
+
   useEffect(() => {
-    const fetchBalance = async () => {
-      try {
-        const response = await axios.get(`${SERVER_URL}/api/v1/account/balance`, {
-          headers: {
-            Authorization: token,
-          },
-        });
-        setBalance(response.data.balance);
-      } catch (error) {
-        console.error("Error fetching balance:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+    fetchBalance();
+    const interval = setInterval(fetchBalance, 20000);
 
-    fetchBalance(); 
+    return () => clearInterval(interval);
+  }, [fetchBalance]);
 
-    const intervalId = setInterval(fetchBalance, 30000); 
-    return () => clearInterval(intervalId);
-  }, [token]); 
-
-  return { balance, loading };
+  return { balance, loading, fetchBalance };
 };
 
