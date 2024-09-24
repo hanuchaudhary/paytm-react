@@ -44,7 +44,9 @@ interface MeInterface {
 }
 
 export const useProfile = () => {
+
   const [myData, setMyData] = useState<MeInterface | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
   const token = localStorage.getItem("token")?.split(" ")[1]
   useEffect(() => {
     const fetchData = async () => {
@@ -55,7 +57,9 @@ export const useProfile = () => {
           },
         });
         setMyData(response.data.user);
+        setLoading(false);
       } catch (error: any) {
+        setLoading(true)
         console.error("Error fetching profile data:", error);
       }
     };
@@ -63,7 +67,7 @@ export const useProfile = () => {
     fetchData();
   }, [SERVER_URL, myData?.name]);
 
-  return { myData };
+  return { myData , loading };
 };
 
 export const useGetBalance = () => {

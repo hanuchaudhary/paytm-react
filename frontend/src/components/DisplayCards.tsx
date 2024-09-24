@@ -1,5 +1,6 @@
 import { CreditCard, Shield } from "lucide-react";
 import { useGetBalance } from "../Hooks/Hooks";
+import Spinner from "./Spinner";
 
 const DisplayCards = () => {
   const { balance, loading  } = useGetBalance();
@@ -11,7 +12,7 @@ const DisplayCards = () => {
           <div>
             <p className="text-sm text-purple-200">Total Balance</p>
             {loading ? (
-              <h1>Loading...</h1>
+              <Spinner label="Fetching your Balance"/>
             ) : (
               <h2 className="text-3xl font-bold text-white">
                 ${balance.toFixed(2)}

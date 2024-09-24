@@ -5,10 +5,11 @@ import DashboardFooter from "../components/DashboardFooter";
 import { Search } from "lucide-react";
 import { LoginFirst } from "../components/LoginFirst";
 import { useAllUsers, useProfile } from "../Hooks/Hooks";
+import Spinner from "../components/Spinner";
 
 export default function Dashboard() {
   const { data, setFilter } = useAllUsers();
-  const { myData } = useProfile();
+  const { myData ,loading } = useProfile();
   const token = localStorage.getItem("token");
 
   const filterData = data.filter((item) => item.id != myData?.id);
@@ -27,7 +28,7 @@ export default function Dashboard() {
               Welcome back,
               <span className="text-2xl capitalize text-neutral-400">
                 {" "}
-                {myData?.name}
+                {loading ? <Spinner label="Fetching your Name"/> : myData?.name}
               </span>
             </h1>
           </div>
