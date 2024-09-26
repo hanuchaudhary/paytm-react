@@ -103,7 +103,7 @@ const EditUserDetails: React.FC<EditUserDetailsProps> = ({ onClick }) => {
                 onChange={(e) =>
                   setFormData((prev) => ({ ...prev, name: e.target.value }))
                 }
-                placeholder="Enter your name"
+                placeholder="Enter your name (optional)"
               />
             </div>
 
@@ -119,7 +119,7 @@ const EditUserDetails: React.FC<EditUserDetailsProps> = ({ onClick }) => {
                 onChange={(e) =>
                   setFormData((prev) => ({ ...prev, password: e.target.value }))
                 }
-                placeholder="Enter your new password"
+                placeholder="Enter your new password (optional)"
               />
             </div>
 

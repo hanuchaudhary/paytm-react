@@ -21,8 +21,8 @@ const Card = ({ name, email, id }: cardInterface) => {
         isOpen={close}
         onClose={() => setClose(false)}
       />
-      <div className="flex items-center justify-between bg-neutral-100 hover:bg-neutral-200 transition-colors duration-500 dark:bg-neutral-700 md:p-4 p-3 rounded-lg">
-        <div className="flex items-center md:space-x-4 space-x-2">
+      <div className="flex items-center justify-between bg-neutral-100 hover:bg-neutral-200 transition-colors duration-500 dark:bg-neutral-700 md:p-4 py-3 px-2 rounded-lg">
+        <div className="flex items-center md:gap-4 gap-2">
           <div className="md:w-10 md:h-10 w-7 h-7 rounded-full bg-gradient-to-br from-purple-600 p-4 to-blue-500 flex items-center justify-center text-white uppercase font-bold">
             {name
               .split(" ")
@@ -31,7 +31,7 @@ const Card = ({ name, email, id }: cardInterface) => {
           </div>
           <div>
             <p className="font-semibold capitalize">{name}</p>
-            <p className="text-sm text-neutral-600 dark:text-neutral-400">
+            <p className="text-xs text-wrap text-neutral-600 dark:text-neutral-400">
               {email}
             </p>
           </div>
@@ -39,9 +39,9 @@ const Card = ({ name, email, id }: cardInterface) => {
         <motion.button
           whileTap={{ scale: 0.95 }}
           whileHover={{ scale: 1.05 }}
-          transition={{ease : "easeInOut"}}
+          transition={{ ease: "easeInOut", duration: 0.15 }}
           onClick={() => setClose(true)}
-          className="md:px-4 px-2 py-2 text-xs font-semibold md:text-base bg-gradient-to-br from-green-600 to-teal-500 text-white rounded-lg transition-colors duration-500"
+          className="md:px-4 px-2 py-2 text-xs font-semibold md:text-base bg-gradient-to-br border-2 md:border-green-600 md:from-green-600 md:to-teal-500 md:dark:border-green-700 md:dark:from-green-600 md:dark:to-teal-500 dark:from-white dark:to-neutral-200 border-neutral-600 bg-neutral-900 md:dark:text-white text-white dark:text-neutral-950  rounded-lg transition-colors duration-500"
         >
           Send Money
         </motion.button>

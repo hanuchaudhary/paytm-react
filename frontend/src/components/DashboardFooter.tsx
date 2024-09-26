@@ -56,25 +56,25 @@ const DashboardFooter = () => {
             className="flex flex-col items-center justify-center bg-neutral-100 dark:bg-neutral-700 p-4 rounded-lg hover:bg-neutral-200 dark:hover:bg-neutral-600 transition duration-500"
           >
             <Pen className="h-8 w-8 mb-2 text-indigo-500" />
-            <span>Edit Details</span>
+            <span className="md:text-base text-sm font-semibold">Edit Details</span>
           </button>
           <button className="flex flex-col items-center justify-center bg-neutral-100 dark:bg-neutral-700 p-4 rounded-lg hover:bg-neutral-200 dark:hover:bg-neutral-600 transition duration-500">
             <CreditCard className="h-8 w-8 mb-2 text-green-500" />
-            <span>Send Money</span>
+            <span className="md:text-base text-sm font-semibold">Send Money</span>
           </button>
           <button
             onClick={() => setDeactivateMenu((prev) => !prev)}
             className="flex flex-col items-center justify-center bg-neutral-100 dark:bg-neutral-700 p-4 rounded-lg hover:bg-neutral-200 dark:hover:bg-neutral-600 transition duration-500"
           >
             <Trash className="h-8 w-8 mb-2 text-red-500" />
-            <span>Deactivate Account</span>
+            <span className="md:text-base text-sm font-semibold">Deactivate Account</span>
           </button>
           <button
             onClick={handleLogout}
             className="flex flex-col items-center justify-center bg-neutral-100 dark:bg-neutral-700 p-4 rounded-lg hover:bg-neutral-200 dark:hover:bg-neutral-600 transition duration-500"
           >
             <LogOut className="h-8 w-8 mb-2 text-yellow-500" />
-            <span>Log Out</span>
+            <span className="md:text-base text-sm font-semibold">Log Out</span>
           </button>
         </div>
       </div>
