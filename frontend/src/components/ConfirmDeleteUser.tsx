@@ -33,8 +33,8 @@ const ConfirmDeleteUser = ({ onClick }: { onClick: () => void }) => {
   };
 
   return (
-    <AnimatePresence>
-      <div className="bg-black w-screen bg-opacity-80 h-screen flex items-center justify-center">
+    <div className="bg-black w-screen bg-opacity-80 h-screen flex items-center justify-center">
+      <AnimatePresence>
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -67,8 +67,8 @@ const ConfirmDeleteUser = ({ onClick }: { onClick: () => void }) => {
             disabled={loading}
           />
         </motion.div>
-      </div>
-    </AnimatePresence>
+      </AnimatePresence>
+    </div>
   );
 };
 

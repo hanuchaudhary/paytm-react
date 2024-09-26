@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 interface buttonInterface {
   classname?: string;
   label: string;
-  onClick: () => Promise<void> | void;
+  onClick?: () => Promise<void> | void;
   disabled?: boolean; 
 }
 const Button = ({ onClick, label, classname ,disabled }: buttonInterface) => {

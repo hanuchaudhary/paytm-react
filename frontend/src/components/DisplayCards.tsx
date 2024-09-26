@@ -15,7 +15,7 @@ const DisplayCards = () => {
             {loading ? (
               <Spinner label="Fetching your Balance" />
             ) : (
-              <h2 className="text-3xl font-bold text-white">
+              <h2 className="text-4xl py-2 font-bold text-white">
                 ${balance.toFixed(2)}
               </h2>
             )}
@@ -31,7 +31,7 @@ const DisplayCards = () => {
             whileTap={{ rotate: 1080 }}
             transition={{ ease: "easeInOut", duration: 0.5 }}
           >
-            <RefreshCcw />{" "}
+            <RefreshCcw />
           </motion.p>
         </div>
       </div>

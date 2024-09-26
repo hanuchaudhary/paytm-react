@@ -44,7 +44,6 @@ const EditUserDetails: React.FC<EditUserDetailsProps> = ({ onClick }) => {
         }
       );
 
-      // Retrieve the user object from local storage
       const userJson = localStorage.getItem("profileData");
       // @ts-ignore
       let user = JSON.parse(userJson);
