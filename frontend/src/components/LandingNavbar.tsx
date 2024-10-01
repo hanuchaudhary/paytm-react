@@ -7,7 +7,7 @@ const LandingNavbar = () => {
   const { theme, toggleTheme } = useTheme();
   return (
     <div>
-      <header className="fixed md:w-[90%] w-[94%] md:top-5 top-2 left-3 md:left-16 border-2 z-50 dark:border-neutral-800 dark:bg-opacity-40 dark:backdrop-filter dark:backdrop-blur-md backdrop-filter backdrop-blur-md bg-opacity-40 border-neutral-50 rounded-xl bg-neutral-100 dark:bg-neutral-800 shadow-md py-4">
+      <header className="fixed md:w-[90%] w-[94%] md:top-5 top-2 left-3 md:left-16 border-2 z-50 dark:border-neutral-800 dark:bg-opacity-40 dark:backdrop-filter dark:backdrop-blur-md backdrop-filter backdrop-blur-md bg-opacity-80 font-semibold border-neutral-100 rounded-xl bg-white dark:bg-neutral-800 shadow-md py-4">
         <div className="container mx-auto px-6 flex justify-between items-center">
           <div className="text-2xl font-bold">rePAY</div>
           <nav className="hidden md:flex space-x-6">

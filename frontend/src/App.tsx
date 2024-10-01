@@ -7,12 +7,12 @@ import {
 } from "react-router-dom";
 import Signup from "./pages/Signup";
 import Signin from "./pages/Signin";
-import Landing from "./pages/Landing";
 import Dashboard from "./pages/Dashboard";
 import { NotFound } from "./pages/NotFound";
 import { AnimatePresence, motion } from "framer-motion";
 import { ThemeProvider } from "./providers/LocalThemeProvider";
 import { useEffect } from "react";
+import LandingPage from "./pages/Landing";
 
 const App = () => {
   const location = useLocation();
@@ -29,7 +29,7 @@ const App = () => {
   return (
     <AnimatePresence mode="wait" initial={false}>
       <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<Landing />} />
+        <Route path="/" element={<LandingPage />} />
         <Route
           path="/signup"
           element={
