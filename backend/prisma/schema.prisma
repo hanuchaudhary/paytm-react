@@ -13,18 +13,35 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model User {
-  id       String   @id @default(uuid())
-  name     String
-  email    String   @unique
-  password String
-  balance  Account?
+  id                   String        @id @default(uuid())
+  name                 String
+  email                String        @unique
+  password             String
+  balance              Account?
+  transactions         Transaction[] @relation("SentTransactions")
+  receivedTransactions Transaction[] @relation("ReceivedTransactions")
 }
 
 model Account {
-  id      String @id @default(uuid())
-  balance Float
-  userId  String @unique
-  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id           String        @id @default(uuid())
+  balance      Float
+  userId       String        @unique
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
 }
+
+model Transaction {
+  id           String   @id @default(uuid())
+  amount       Float
+  timestamp    DateTime @default(now())
+  accountId    String
+  account      Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  senderId     String?  
+  sender       User?    @relation("SentTransactions", fields: [senderId], references: [id])
+
+  receiverId   String?  
+  receiver     User?    @relation("ReceivedTransactions", fields: [receiverId], references: [id])
+}
+

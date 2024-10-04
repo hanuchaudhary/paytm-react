@@ -7,3 +7,4 @@ export default defineConfig({
     include: ['@tsparticles/slim', '@tsparticles/react'],
   },
 })
+

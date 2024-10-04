@@ -49,12 +49,12 @@ const SendMoneyModal = ({
           },
         }
       );
-
+      setLoading(false);
       setSuccess(true);
 
       setTimeout(() => {
         setSuccess(false);
-        onClose(); // Close the modal after success
+        onClose();
       }, 2000);
     } catch (error: any) {
       setLoading(false);

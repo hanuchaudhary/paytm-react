@@ -9,33 +9,56 @@ interface usersInterface {
   password: string;
 }
 
+interface usersInterface {
+  id: string;
+  email: string;
+  name: string;
+  password: string;
+}
+
 export const useAllUsers = () => {
   const [data, setData] = useState<usersInterface[]>([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState("");
+  const [filter, setFilter] = useState("");  
+  const [debouncedFilter, setDebouncedFilter] = useState(filter);  
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    try {
-      const token = localStorage.getItem("token")?.split(" ")[1];
-      const fetchData = async () => {
-        const response = await axios.get(`${SERVER_URL}/api/v1/user/bulk?filter=${filter}`, {
-          headers: {
-            Authorization: token
-          }
-        })
-        setData(response.data.users)
-        setLoading(false)
-      }
-      fetchData();
-    } catch (error: any) {
-      setLoading(true)
-      setError(error)
-    }
+    const handler = setTimeout(() => {
+      setDebouncedFilter(filter);
+    }, 500); 
 
-  }, [filter])
-  return { data, loading, setFilter, error }
-}
+    return () => {
+      clearTimeout(handler);  
+    };
+  }, [filter]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const token = localStorage.getItem("token")?.split(" ")[1];
+        const response = await axios.get(`${SERVER_URL}/api/v1/user/bulk?filter=${debouncedFilter}`, {
+          headers: {
+            Authorization: token || ""
+          }
+        });
+        setData(response.data.users);
+      } catch (error: any) {
+        setError(error.message || "Error fetching users");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (debouncedFilter !== null) {
+      fetchData();
+    }
+  }, [debouncedFilter]);
+
+  return { data, loading, setFilter, error };
+};
+
 
 interface MeInterface {
   name: string;
@@ -118,3 +141,64 @@ export const useGetBalance = () => {
   return { balance, loading, fetchBalance };
 };
 
+
+interface Transaction {
+  id: string
+  amount: number
+  timestamp: string
+  sender: {
+    name: string
+    email: string
+  }
+  receiver: {
+    name: string
+    email: string
+  }
+}
+
+export const useTransactions = () => {
+  const [transactions, setTransactions] = useState<Transaction[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  const fetchTransactions = async () => {
+    try {
+      setLoading(true)
+      setError(null)
+      const token = localStorage.getItem("token")?.split(" ")[1]
+      if (!token) {
+        throw new Error("No authentication token found")
+      }
+
+      const response = await axios.get<{ transactions: Transaction[] }>(
+        `${SERVER_URL}/api/v1/account/transactions/recent`,
+        {
+          headers: {
+            Authorization: token
+          },
+        }
+      )
+
+      setTransactions(response.data.transactions)
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        setError(err.response?.data?.message || err.message)
+      } else {
+        setError('An unexpected error occurred')
+      }
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchTransactions();
+  }, []);
+
+  const refetch = () => {
+    setLoading(true)
+    fetchTransactions()
+  }
+
+  return { transactions, loading, error, refetch }
+}

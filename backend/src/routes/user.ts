@@ -229,7 +229,7 @@ userRouter.get('/me', async (c) => {
                 id: true,
                 name: true,
                 email: true,
-            },
+            }
         });
 
         if (!user) {

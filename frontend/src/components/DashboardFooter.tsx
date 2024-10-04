@@ -13,12 +13,10 @@ const DashboardFooter = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("profileData");
-    navigate("/");
+    navigate("/signin");
   };
 
   const handleEditDetailsClick = () => {
-    console.log("kalik");
-    
     navigate("/dashboard/edit");
   };
 
