@@ -1,7 +1,6 @@
-"use client";
-
 import { useState, useEffect } from "react";
 import { Search, ArrowUpRight, ArrowDownLeft } from "lucide-react";
+import { motion } from "framer-motion";
 import Nav from "../components/Nav";
 import DisplayCards from "../components/DisplayCards";
 import Card from "../components/Card";
@@ -9,7 +8,6 @@ import DashboardFooter from "../components/DashboardFooter";
 import { LoginFirst } from "../components/LoginFirst";
 import { useAllUsers, useProfile, useTransactions } from "../Hooks/Hooks";
 import Spinner from "../components/Spinner";
-import { motion } from "framer-motion";
 
 export default function Dashboard() {
   const { data, setFilter } = useAllUsers();
@@ -68,7 +66,7 @@ export default function Dashboard() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={handleTransactionButton}
-              className="px-4 py-2 bg-neutral-800 dark:bg-neutral-100 text-white dark:text-black font-semibold rounded-lg text-xs md:text-base transition-colors duration-300"
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg text-xs md:text-base transition-colors duration-300"
               aria-label={
                 activeSection === "sendMoney"
                   ? "View Transactions"
@@ -93,7 +91,7 @@ export default function Dashboard() {
                   <Search className="absolute left-3 top-2.5 h-5 w-5 text-neutral-400" />
                 </div>
               </div>
-              <div className="space-y-4 h-[60vh] overflow-y-scroll custom-scrollbar">
+              <div className="space-y-4 h-[60vh] overflow-y-auto custom-scrollbar">
                 {filterData.length > 0 ? (
                   filterData.map((user) => (
                     <div key={user.id}>
@@ -101,60 +99,93 @@ export default function Dashboard() {
                     </div>
                   ))
                 ) : (
-                  <div className="font-semibold">No user found...</div>
+                  <div className="font-semibold text-center py-4">
+                    No user found...
+                  </div>
                 )}
               </div>
             </>
           ) : (
-            <div className="space-y-4 h-[60vh] overflow-y-scroll custom-scrollbar">
+            <div className="space-y-4 h-[60vh] overflow-y-auto custom-scrollbar">
               {transactions.length > 0 ? (
                 <ul className="space-y-4">
                   {transactions.map((transaction) => (
                     <li
                       key={transaction.id}
-                      className="bg-neutral-100 dark:bg-neutral-700 p-4 rounded-lg shadow"
+                      className="bg-neutral-100 dark:bg-neutral-700 p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
                     >
                       <div className="flex justify-between items-center">
-                        <div className="flex items-center space-x-2">
-                          {transaction.sender.email === myData?.email ? (
-                            <ArrowUpRight className="text-red-500" />
-                          ) : (
-                            <ArrowDownLeft className="text-green-500" />
-                          )}
+                        <div className="flex items-center space-x-3">
+                          <div
+                            className={`p-2 rounded-full ${
+                              transaction.sender.email === myData?.email
+                                ? "bg-red-100 dark:bg-red-900"
+                                : "bg-green-100 dark:bg-green-900"
+                            }`}
+                          >
+                            {transaction.sender.email === myData?.email ? (
+                              <ArrowUpRight className="h-6 w-6  text-red-500 dark:text-red-300" />
+                            ) : (
+                              <ArrowDownLeft className="h-6 w-6 text-green-500 dark:text-green-300" />
+                            )}
+                          </div>
                           <div>
-                            <p className="font-semibold capitalize">
+                            <p className="font-semibold text-lg">
                               {transaction.sender.email === myData?.email
-                                ? `To: ${transaction.receiver.name}`
-                                : `From: ${transaction.sender.name}`}
+                                ? "Paid"
+                                : "Received"}
                             </p>
-                            <p className="text-neutral-300 text-xs md:text-sm">
+                            <p className="text-neutral-500 dark:text-neutral-400 text-sm">
                               {transaction.sender.email === myData?.email
-                                ? `${transaction.receiver.email}`
-                                : `${transaction.sender.email}`}
+                                ? transaction?.receiver?.name ?? "Deleted User"
+                                : transaction?.sender?.name ?? "Deleted User"}
                             </p>
-                            <p className="text-sm mt-2 text-neutral-500">
-                              {new Date(transaction.timestamp).toLocaleString()}
+                            <p className="text-neutral-400 dark:text-neutral-500 text-xs">
+                              {transaction.sender.email === myData?.email
+                                ? transaction?.receiver?.email ??
+                                  "deleteduser@gmail.com"
+                                : transaction?.sender?.email ??
+                                  "deleteduser@gmail.com"}
                             </p>
                           </div>
                         </div>
-                        <div
-                          className={`font-bold ${
-                            transaction.sender.email === myData?.email
-                              ? "text-red-500"
-                              : "text-green-500"
-                          }`}
-                        >
-                          {transaction.sender.email === myData?.email
-                            ? "-"
-                            : "+"}
-                          ${transaction.amount}
+                        <div className="flex flex-col items-end">
+                          <div
+                            className={`font-bold text-lg ${
+                              transaction.sender.email === myData?.email
+                                ? "text-red-500 dark:text-red-400"
+                                : "text-green-500 dark:text-green-400"
+                            }`}
+                          >
+                            {transaction.sender.email === myData?.email
+                              ? "-"
+                              : "+"}
+                            ${transaction.amount}
+                          </div>
+                          <div className="md:flex gap-2">
+                            <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1">
+                              {new Date(
+                                transaction?.timestamp
+                              ).toLocaleDateString()}{" "}
+                            </p>
+                            <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1">
+                              {new Date(
+                                transaction?.timestamp
+                              ).toLocaleTimeString([], {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              })}{" "}
+                            </p>
+                          </div>
                         </div>
                       </div>
                     </li>
                   ))}
                 </ul>
               ) : (
-                <div className="font-semibold">No transactions found...</div>
+                <div className="font-semibold text-center py-4">
+                  No transactions found...
+                </div>
               )}
             </div>
           )}
