@@ -106,7 +106,10 @@ const SendMoneyModal = ({
 
             <div className="bg-neutral-100 dark:bg-neutral-600 p-4 rounded-lg flex items-center my-4">
               <div className="capitalize bg-gradient-to-br from-purple-600 to-blue-500 text-white font-bold h-12 w-12 rounded-full flex justify-center items-center mr-4">
-                {name.split(" ").map((n) => n[0]).join("")}
+                {name
+                  .split(" ")
+                  .map((n) => n[0])
+                  .join("")}
               </div>
               <div>
                 <h3 className="text-lg font-semibold capitalize">{name}</h3>
@@ -130,6 +133,7 @@ const SendMoneyModal = ({
 
             <div className="text-center">
               <Button
+                classname={`${loading ? "cursor-not-allowed dark:bg-neutral-400 bg-neutral-400 " : ""}`}
                 label={loading ? "Sending Money..." : "Send Money"}
                 onClick={handleSendMoney}
                 disabled={loading}

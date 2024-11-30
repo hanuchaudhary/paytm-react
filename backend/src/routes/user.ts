@@ -2,7 +2,7 @@ import { Hono } from 'hono';
 import bcrypt from 'bcryptjs';
 import { PrismaClient } from "@prisma/client/edge";
 import { withAccelerate } from "@prisma/extension-accelerate";
-import { verify, sign, jwt } from "hono/jwt";
+import { verify } from "hono/jwt";
 import { signinValidation, signupValidation } from '../Validation';
 import { Jwt } from 'hono/utils/jwt';
 
@@ -24,7 +24,6 @@ userRouter.use("/*", async (c, next) => {
         return;
     }
     const authHeader = c.req.header("authorization") || "";
-    
     try {
         const userVerify = await verify(authHeader, c.env.JWT_SECRET);
 
@@ -199,6 +198,9 @@ userRouter.get('/bulk', async (c) => {
                 email: true,
                 balance: true,
             },
+            orderBy :{
+                name: 'asc'
+            }
         });
 
         return c.json({
