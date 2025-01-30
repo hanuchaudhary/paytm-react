@@ -2,7 +2,8 @@
   "name": "backend",
   "scripts": {
     "dev": "wrangler dev src/index.ts",
-    "deploy": "wrangler deploy --minify src/index.ts"
+    "deploy": "wrangler deploy --minify src/index.ts",
+    "build" : "tsc -b && node dist/index.js"
   },
   "dependencies": {
     "@hanuchaudhary/medium-app": "^1.0.3",
